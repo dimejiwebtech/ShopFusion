@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Store - ShopFusion{% endblock %}
+
+{% block content %}
+<section class="py-8 bg-gray-100">
+	<div class="container mx-auto px-4">
+		<h2 class="text-3xl font-bold text-gray-900">Our Store</h2>
+	</div>
+</section>
+<section class="py-12">
+<div class="container mx-auto px-4">
+
+<div class="flex flex-wrap md:flex-nowrap gap-6">
+	<aside class="w-full md:w-1/4">		
+		<div class="bg-white border border-gray-200 rounded-lg shadow-sm">
+			<article class="border-b border-gray-200">
+				<header class="p-4 cursor-pointer flex justify-between items-center">
+					<h6 class="font-semibold text-gray-800">Categories</h6>
+					<i class="fa fa-chevron-down text-gray-500"></i>
+				</header>
+				<div class="p-4" id="collapse_1">
+					<ul class="space-y-2">
+                        <li><a href="{% url 'store' %}" class="text-gray-700 hover:text-blue-600 block">All Products</a></li>
+                        {% for category in categories %}
+						<li><a href="{{category.get_url}}" class="text-gray-700 hover:text-blue-600 block">{{category.category_name}}</a></li>
+                        {% endfor %}
+					</ul>
+				</div>
+			</article>
+
+			<article class="border-b border-gray-200">
+				<header class="p-4 cursor-pointer flex justify-between items-center">
+					<h6 class="font-semibold text-gray-800">Sizes</h6>
+					<i class="fa fa-chevron-down text-gray-500"></i>
+				</header>
+				<div class="p-4" id="collapse_4">
+					<div class="flex flex-wrap gap-2">
+						<label class="checkbox-btn">
+							<input type="checkbox" class="hidden">
+							<span class="px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-gray-700 hover:bg-gray-100 text-sm">XS</span>
+						</label>
+						<label class="checkbox-btn">
+							<input type="checkbox" class="hidden">
+							<span class="px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-gray-700 hover:bg-gray-100 text-sm">SM</span>
+						</label>
+						<label class="checkbox-btn">
+							<input type="checkbox" class="hidden">
+							<span class="px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-gray-700 hover:bg-gray-100 text-sm">LG</span>
+						</label>
+						<label class="checkbox-btn">
+							<input type="checkbox" class="hidden">
+							<span class="px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-gray-700 hover:bg-gray-100 text-sm">XXL</span>
+						</label>
+					</div>
+				</div>
+			</article>
+	
+			<article class="border-b border-gray-200">
+				<header class="p-4 cursor-pointer flex justify-between items-center">
+					<h6 class="font-semibold text-gray-800">Price range</h6>
+					<i class="fa fa-chevron-down text-gray-500"></i>
+				</header>
+				<div class="p-4" id="collapse_3">
+					<div class="flex space-x-4 mb-4">
+						<div class="flex-1">
+							<label class="block text-sm text-gray-600 mb-1">Min</label>
+							<select class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+								<option value="0">$0</option>
+								<option value="50">$50</option>
+								<option value="100">$100</option>
+								<option value="150">$150</option>
+								<option value="200">$200</option>
+								<option value="500">$500</option>
+								<option value="1000">$1000</option>
+							</select>
+						</div>
+						<div class="flex-1">
+							<label class="block text-sm text-gray-600 mb-1">Max</label>
+							<select class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+								<option value="50">$50</option>
+								<option value="100">$100</option>
+								<option value="150">$150</option>
+								<option value="200">$200</option>
+								<option value="500">$500</option>
+								<option value="1000">$1000</option>
+								<option value="2000">$2000+</option>
+							</select>
+						</div>
+					</div>
+					<button class="block w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">Apply</button>
+				</div>
+			</article>
+		</div>
+	</aside>
+
+	<main class="w-full md:w-3/4">
+
+		<header class="border-b border-gray-200 mb-4 pb-3">
+			<div class="flex items-center">
+				<span class="md:mr-auto text-gray-700"><b>{{product_count }}</b> Products Available </span>
+			</div>
+		</header>
+
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for product in products %}
+			<div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+				<a href="{{ product.get_url }}" class="block relative overflow-hidden">
+					<img src="{{ product.product_image.url }}" class="w-full h-48 object-cover" alt="Product">
+				</a>
+				<figcaption class="p-4">
+					<div style="height: 6rem;"> <a href="{{ product.get_url }}" class="block text-gray-800 hover:text-blue-600 font-semibold mb-1">{{product.product_name}}</a>
+						<div class="mt-2">
+							<span class="text-lg font-bold text-gray-900">${{product.price}}</span>
+						</div>
+					</div>
+					<a href="#" class="block w-full text-center mt-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">Add to Cart</a>
+				</figcaption>
+			</div>
+			{% endfor %}
+			</div> 
+            <nav class="mt-8" aria-label="Page navigation">
+			<ul class="flex justify-center space-x-1">
+				<li><a class="block px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-400 cursor-not-allowed" href="#">Previous</a></li>
+				<li><a class="block px-4 py-2 border border-blue-600 rounded-md bg-blue-600 text-white" href="#">1</a></li>
+				<li><a class="block px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100" href="#">2</a></li>
+				<li><a class="block px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100" href="#">3</a></li>
+				<li><a class="block px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100" href="#">Next</a></li>
+			</ul>
+		</nav>
+
+	</main>
+</div>
+
+</div>
+</section>
+{% endblock %}

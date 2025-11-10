@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'shop/partials/hero.html' %}
+
+<section class="py-12">
+	<div class="max-w-7xl mx-auto px-4">
+		<header class="flex justify-between items-center mb-8">
+			<h3 class="text-2xl md:text-3xl font-bold text-gray-900">Explore by Category</h3>
+			<a href="#" class="px-4 py-2 md:px-5 md:py-2.5 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition-all text-sm md:text-base">
+				View All
+			</a>
+		</header>
+
+		<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+			<!-- Category 1: Electronics -->
+			<a href="#" class="group relative block h-64 md:h-80 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+				<div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70 group-hover:from-black/30 group-hover:via-black/50 group-hover:to-black/80 transition-all duration-300"></div>
+				<img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Electronics">
+				<div class="absolute inset-0 flex flex-col justify-end p-5 md:p-6">
+					<h4 class="text-white text-xl md:text-2xl font-bold mb-1 group-hover:translate-y-0 transition-transform">Electronics</h4>
+					<div class="flex items-center justify-between">
+						<span class="text-gray-200 text-sm md:text-base font-medium">120 Products</span>
+						<i class="fas fa-arrow-right text-white opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all"></i>
+					</div>
+				</div>
+			</a>
+
+			<!-- Category 2: Fashion -->
+			<a href="#" class="group relative block h-64 md:h-80 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+				<div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70 group-hover:from-black/30 group-hover:via-black/50 group-hover:to-black/80 transition-all duration-300"></div>
+				<img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=500" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Fashion">
+				<div class="absolute inset-0 flex flex-col justify-end p-5 md:p-6">
+					<h4 class="text-white text-xl md:text-2xl font-bold mb-1 group-hover:translate-y-0 transition-transform">Fashion</h4>
+					<div class="flex items-center justify-between">
+						<span class="text-gray-200 text-sm md:text-base font-medium">345 Products</span>
+						<i class="fas fa-arrow-right text-white opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all"></i>
+					</div>
+				</div>
+			</a>
+
+			<!-- Category 3: Home & Kitchen -->
+			<a href="#" class="group relative block h-64 md:h-80 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+				<div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70 group-hover:from-black/30 group-hover:via-black/50 group-hover:to-black/80 transition-all duration-300"></div>
+				<img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=500" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Home & Kitchen">
+				<div class="absolute inset-0 flex flex-col justify-end p-5 md:p-6">
+					<h4 class="text-white text-xl md:text-2xl font-bold mb-1 group-hover:translate-y-0 transition-transform">Home & Kitchen</h4>
+					<div class="flex items-center justify-between">
+						<span class="text-gray-200 text-sm md:text-base font-medium">210 Products</span>
+						<i class="fas fa-arrow-right text-white opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all"></i>
+					</div>
+				</div>
+			</a>
+
+			<!-- Category 4: Sports & Outdoors -->
+			<a href="#" class="group relative block h-64 md:h-80 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+				<div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70 group-hover:from-black/30 group-hover:via-black/50 group-hover:to-black/80 transition-all duration-300"></div>
+				<img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=500" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Sports & Outdoors">
+				<div class="absolute inset-0 flex flex-col justify-end p-5 md:p-6">
+					<h4 class="text-white text-xl md:text-2xl font-bold mb-1 group-hover:translate-y-0 transition-transform">Sports & Outdoors</h4>
+					<div class="flex items-center justify-between">
+						<span class="text-gray-200 text-sm md:text-base font-medium">150 Products</span>
+						<i class="fas fa-arrow-right text-white opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all"></i>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+</section>
+<section class="py-8">
+	<div class="container mx-auto px-4">
+
+		<header class="flex justify-between items-center mb-6">
+			<h3 class="text-2xl font-bold text-gray-900">Popular products</h3>
+			<a href="{% url 'store' %}" class="px-5 py-2 border border-blue-600 text-blue-600 font-semibold rounded-md hover:bg-blue-600 hover:text-white transition-colors">See all</a>
+		</header>
+
+		<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+			{% for product in products %}
+				{% if forloop.counter >= 8 %}
+			<div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transform transition-transform hover:shadow-lg hover:-translate-y-1">
+				<a href="{{ product.get_url }}" class="block aspect-w-16 aspect-h-16"> <img src="{{ product.product_image.url }}" class="w-full h-full object-cover">
+				</a>
+				<figcaption class="p-4">
+					<a href="{{ product.get_url }}" class="block text-gray-800 hover:text-blue-600 font-semibold truncate mb-1" title="Just another product name">{{product.product_name}}</a>
+					<div class="text-xl font-bold text-gray-900 mt-1">${{product.price}}</div>
+				</figcaption>
+			</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+</section>
+
+{% endblock %}

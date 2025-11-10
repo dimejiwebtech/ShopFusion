@@ -1,0 +1,409 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.product_name }} - ShopFusion{% endblock %}
+
+{% block content %}
+<section class="py-6 bg-gray-50">
+<div class="max-w-7xl mx-auto px-4">
+
+	<!-- Product Main Section -->
+	<div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+			
+			<!-- Product Image -->
+			<div class="flex items-center justify-center bg-gray-50 rounded-lg p-4">
+				<img src="{{ product.product_image.url }}" class="w-full h-auto max-h-96 object-contain" alt="{{ product.product_name }}">
+			</div>
+
+			<!-- Product Info -->
+			<div class="flex flex-col">
+				<div class="mb-4">
+					<h1 class="text-3xl font-bold text-gray-900 mb-2">{{ product.product_name }}</h1>
+					
+					<!-- Rating & Reviews -->
+					<div class="flex items-center gap-2 mb-3">
+						<div class="flex text-yellow-400">
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star-half-alt"></i>
+						</div>
+						<span class="text-gray-600 text-sm">(4.5)</span>
+						<span class="text-gray-400 text-sm">|</span>
+						<a href="#reviews" class="text-blue-600 text-sm hover:underline">128 Reviews</a>
+					</div>
+
+					<!-- Price -->
+					<div class="mb-4">
+						<span class="text-4xl font-bold text-gray-900">${{ product.price }}</span>
+					</div>
+
+					<!-- Stock Status -->
+					<div class="mb-4">
+						{% if product.stock > 0 %}
+							<span class="inline-flex items-center gap-1 text-green-600 font-medium">
+								<i class="fas fa-check-circle"></i> In Stock
+							</span>
+							<span class="text-gray-500 text-sm ml-2">({{ product.stock }} available)</span>
+						{% else %}
+							<span class="inline-flex items-center gap-1 text-red-600 font-medium">
+								<i class="fas fa-times-circle"></i> Out of Stock
+							</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<!-- Short Description -->
+				<div class="mb-6">
+					<p class="text-gray-700 leading-relaxed">{{ product.short_description | safe }}</p>
+				</div>
+
+				<hr class="border-gray-200 my-4">
+
+				<!-- Quantity Selector -->
+				<div class="mb-6">
+					<label class="block text-sm font-semibold text-gray-700 mb-2">Quantity</label>
+					<div class="flex items-center gap-3">
+						<div class="flex items-center border border-gray-300 rounded-lg">
+							<button type="button" class="px-4 py-2 hover:bg-gray-100 transition">
+								<i class="fas fa-minus text-gray-600"></i>
+							</button>
+							<input type="number" value="1" min="1" class="w-16 text-center border-x border-gray-300 py-2 focus:outline-none">
+							<button type="button" class="px-4 py-2 hover:bg-gray-100 transition">
+								<i class="fas fa-plus text-gray-600"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- Action Buttons -->
+                <div class="flex gap-3 mb-6">
+                    {% if product.stock <= 0 %}
+                        <button type="button" disabled class="bg-gray-400 text-gray-700 px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-not-allowed">
+                            <i class="fas fa-ban"></i>
+                            <span>Out of Stock</span>
+                        </button>
+                    {% else %}
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    {% endif %}
+                </div>
+
+				<!-- Product Meta -->
+				<div class="border-t border-gray-200 pt-4 space-y-2 text-sm">
+					<div class="flex gap-2">
+						<span class="font-semibold text-gray-700">SKU:</span>
+						<span class="text-gray-600">{{ product.sku|default:"N/A" }}</span>
+					</div>
+					<div class="flex gap-2">
+						<span class="font-semibold text-gray-700">Category:</span>
+						<a href="#" class="text-blue-600 hover:underline">{{ product.category.name }}</a>
+					</div>
+					<div class="flex gap-2">
+						<span class="font-semibold text-gray-700">Tags:</span>
+						<span class="text-gray-600">Fashion, Clothing, Accessories</span>
+					</div>
+				</div>
+
+				<!-- Share -->
+				<div class="border-t border-gray-200 mt-4 pt-4">
+					<div class="flex items-center gap-3">
+						<span class="font-semibold text-gray-700 text-sm">Share:</span>
+						<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition">
+							<i class="fab fa-facebook-f text-sm"></i>
+						</a>
+						<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-sky-400 text-white hover:bg-sky-500 transition">
+							<i class="fab fa-twitter text-sm"></i>
+						</a>
+						<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-700 transition">
+							<i class="fab fa-whatsapp text-sm"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Product Content Section -->
+	{% if product.product_content %}
+	<div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+		<h2 class="text-2xl font-bold text-gray-900 mb-4">Product Details</h2>
+		<div class="prose-content max-w-none text-gray-700">
+			{{ product.product_content | safe }}
+		</div>
+	</div>
+	{% endif %}
+
+	<!-- Customer Reviews Section -->
+	<div class="bg-white rounded-lg shadow-sm p-6" id="reviews">
+		<div class="flex items-center justify-between mb-6">
+			<h2 class="text-2xl font-bold text-gray-900">Customer Reviews</h2>
+			<button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
+				Write a Review
+			</button>
+		</div>
+
+		<!-- Review Summary -->
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 pb-6 border-b border-gray-200">
+			<div class="text-center">
+				<div class="text-5xl font-bold text-gray-900 mb-2">4.5</div>
+				<div class="flex justify-center text-yellow-400 text-xl mb-2">
+					<i class="fas fa-star"></i>
+					<i class="fas fa-star"></i>
+					<i class="fas fa-star"></i>
+					<i class="fas fa-star"></i>
+					<i class="fas fa-star-half-alt"></i>
+				</div>
+				<div class="text-gray-600 text-sm">Based on 128 reviews</div>
+			</div>
+			
+			<div class="md:col-span-2 space-y-2">
+				<div class="flex items-center gap-2">
+					<span class="text-sm text-gray-600 w-8">5★</span>
+					<div class="flex-1 bg-gray-200 rounded-full h-2">
+						<div class="bg-yellow-400 h-2 rounded-full" style="width: 70%"></div>
+					</div>
+					<span class="text-sm text-gray-600 w-8">90</span>
+				</div>
+				<div class="flex items-center gap-2">
+					<span class="text-sm text-gray-600 w-8">4★</span>
+					<div class="flex-1 bg-gray-200 rounded-full h-2">
+						<div class="bg-yellow-400 h-2 rounded-full" style="width: 20%"></div>
+					</div>
+					<span class="text-sm text-gray-600 w-8">26</span>
+				</div>
+				<div class="flex items-center gap-2">
+					<span class="text-sm text-gray-600 w-8">3★</span>
+					<div class="flex-1 bg-gray-200 rounded-full h-2">
+						<div class="bg-yellow-400 h-2 rounded-full" style="width: 7%"></div>
+					</div>
+					<span class="text-sm text-gray-600 w-8">9</span>
+				</div>
+				<div class="flex items-center gap-2">
+					<span class="text-sm text-gray-600 w-8">2★</span>
+					<div class="flex-1 bg-gray-200 rounded-full h-2">
+						<div class="bg-yellow-400 h-2 rounded-full" style="width: 2%"></div>
+					</div>
+					<span class="text-sm text-gray-600 w-8">2</span>
+				</div>
+				<div class="flex items-center gap-2">
+					<span class="text-sm text-gray-600 w-8">1★</span>
+					<div class="flex-1 bg-gray-200 rounded-full h-2">
+						<div class="bg-yellow-400 h-2 rounded-full" style="width: 1%"></div>
+					</div>
+					<span class="text-sm text-gray-600 w-8">1</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- Individual Reviews -->
+		<div class="space-y-6">
+			<!-- Review 1 -->
+			<article class="border-b border-gray-200 pb-6">
+				<div class="flex gap-4">
+					<img src="{% static 'images/avatars/avatar1.jpg' %}" class="w-12 h-12 rounded-full flex-shrink-0" alt="User">
+					<div class="flex-1">
+						<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
+							<div>
+								<h6 class="font-semibold text-gray-900">Mike Johnson</h6>
+								<div class="flex text-yellow-400 text-sm mt-1">
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+								</div>
+							</div>
+							<span class="text-sm text-gray-500 mt-2 md:mt-0">April 24, 2024</span>
+						</div>
+						<p class="text-gray-700 leading-relaxed mt-2">
+							Excellent product! The quality exceeded my expectations. Shipping was fast and the packaging was secure. Highly recommend this to anyone looking for a reliable product.
+						</p>
+						<div class="flex items-center gap-4 mt-3 text-sm">
+							<button class="text-gray-600 hover:text-blue-600 transition">
+								<i class="far fa-thumbs-up"></i> Helpful (12)
+							</button>
+							<button class="text-gray-600 hover:text-blue-600 transition">
+								<i class="far fa-comment"></i> Reply
+							</button>
+						</div>
+					</div>
+				</div>
+			</article>
+
+			<!-- Review 2 -->
+			<article class="border-b border-gray-200 pb-6">
+				<div class="flex gap-4">
+					<img src="{% static 'images/avatars/avatar2.jpg' %}" class="w-12 h-12 rounded-full flex-shrink-0" alt="User">
+					<div class="flex-1">
+						<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
+							<div>
+								<h6 class="font-semibold text-gray-900">Sarah Williams</h6>
+								<div class="flex text-yellow-400 text-sm mt-1">
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="fas fa-star"></i>
+									<i class="far fa-star"></i>
+								</div>
+							</div>
+							<span class="text-sm text-gray-500 mt-2 md:mt-0">April 20, 2024</span>
+						</div>
+						<p class="text-gray-700 leading-relaxed mt-2">
+							Good product overall. Meets my needs perfectly. The only minor issue was the delivery took a bit longer than expected, but the product itself is great.
+						</p>
+						<div class="flex items-center gap-4 mt-3 text-sm">
+							<button class="text-gray-600 hover:text-blue-600 transition">
+								<i class="far fa-thumbs-up"></i> Helpful (8)
+							</button>
+							<button class="text-gray-600 hover:text-blue-600 transition">
+								<i class="far fa-comment"></i> Reply
+							</button>
+						</div>
+					</div>
+				</div>
+			</article>
+		</div>
+
+		<!-- Load More -->
+		<div class="text-center mt-6">
+			<button class="border-2 border-gray-300 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:border-blue-600 hover:text-blue-600 transition">
+				Load More Reviews
+			</button>
+		</div>
+	</div>
+
+</div>
+</section>
+
+<style>
+
+  /* Content Styles - Better Typography */
+  .prose-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+  
+  .prose-content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    color: #111827;
+    line-height: 1.3;
+  }
+  
+  .prose-content h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #111827;
+    line-height: 1.4;
+  }
+  
+  .prose-content h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1.75rem;
+    margin-bottom: 0.875rem;
+    color: #111827;
+    line-height: 1.5;
+  }
+  
+  .prose-content p {
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+  }
+  
+
+
+  /* List Styles */
+.prose-content ul {
+  list-style-type: disc;
+  margin-bottom: 1.5rem;
+  padding-left: 2.5rem;
+  margin-left: 1rem;
+  overflow: hidden;
+}
+
+.prose-content ol {
+  list-style-type: decimal;
+  margin-bottom: 1.5rem;
+  padding-left: 2.5rem;
+  margin-left: 1rem;
+  overflow: hidden;
+}
+
+.prose-content ul ul {
+  list-style-type: circle;
+  margin-top: 0.5rem;
+}
+
+.prose-content ol ol {
+  list-style-type: lower-alpha;
+  margin-top: 0.5rem;
+}
+
+.prose-content li {
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
+}
+  
+  .prose-content strong {
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .prose-content a {
+    color: #10b981;
+    text-decoration: none;
+  }
+  
+  .prose-content a:hover {
+    color: #059669;
+  }
+  
+  .prose-content blockquote {
+    border-left: 4px solid #10b981;
+    padding-left: 1.25rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #4b5563;
+  }
+  
+  .prose-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .prose-content code {
+    background-color: #f3f4f6;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    color: #dc2626;
+  }
+  
+  .prose-content pre {
+    background-color: #1f2937;
+    color: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+  
+  .prose-content pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+  }
+</style>
+{% endblock %}
