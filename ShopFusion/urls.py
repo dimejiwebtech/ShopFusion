@@ -25,6 +25,7 @@ urlpatterns = [
     path('tinymce/', include('tinymce.urls')),
     path('tinymce/upload/', tinymce_upload),
     path('', include('shop.urls')),
+    path('cart/', include('carts.urls')),
 ]
 
 if settings.DEBUG:

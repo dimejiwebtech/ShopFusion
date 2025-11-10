@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<section class="py-8 bg-gray-100">
+<div class="container mx-auto px-4">
+
+<div class="flex flex-wrap -mx-4">
+	<aside class="w-full lg:w-3/4 px-4">
+		<div class="bg-white shadow-md rounded-lg overflow-hidden">
+			<table class="w-full">
+				<thead class="border-b border-gray-200">
+					<tr class="text-xs text-gray-500 uppercase font-semibold">
+						<th scope="col" class="px-6 py-3 text-left">Product</th>
+						<th scope="col" class="px-6 py-3 text-left" style="width:120px;">Quantity</th>
+						<th scope="col" class="px-6 py-3 text-left" style="width:120px;">Price</th>
+						<th scope="col" class="px-6 py-3 text-right" style="width:200px;"></th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-gray-200">
+					<tr class="hover:bg-gray-50">
+						<td class="px-6 py-4">
+							<figure class="flex items-center space-x-4">
+								<div class="flex-shrink-0"><img src="{% static './images/items/11.jpg' %}" class="w-20 h-20 object-cover rounded-md"></div>
+								<figcaption class="flex-grow">
+									<a href="#" class="font-semibold text-gray-900 hover:text-blue-600">Camera Canon EOS M50 Kit</a>
+									<p class="text-sm text-gray-500">Matrix: 25 Mpx <br> Brand: Canon</p>
+								</figcaption>
+							</figure>
+						</td>
+						<td class="px-6 py-4">
+							<div class="flex items-center border border-gray-300 rounded-md max-w-[120px]">
+								<button class="px-3 py-1 bg-gray-100 hover:bg-gray-200" type="button" id="button-plus"> <i class="fa fa-minus"></i> </button>
+								<input type="text" class="w-12 text-center border-l border-r focus:outline-none" value="1">
+								<button class="px-3 py-1 bg-gray-100 hover:bg-gray-200" type="button" id="button-minus"> <i class="fa fa-plus"></i> </button>
+							</div>
+						</td>
+						<td class="px-6 py-4">
+							<div class="text-left">
+								<var class="block text-lg font-semibold text-gray-900">$1156.00</var>
+								<small class="block text-sm text-gray-500"> $315.20 each </small>
+							</div>
+						</td>
+						<td class="px-6 py-4 text-right">
+							<a href="" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 text-sm font-semibold"> Remove</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</aside>
+	
+	<aside class="w-full lg:w-1/4 px-4 mt-6 lg:mt-0">
+		<div class="bg-white shadow-md rounded-lg">
+			<div class="p-6">
+				<dl class="flex justify-between items-center mb-2">
+					<dt class="text-gray-600">Total price:</dt>
+					<dd class="text-gray-800 font-semibold">$69.97</dd>
+				</dl>
+				<dl class="flex justify-between items-center mb-2">
+					<dt class="text-gray-600">Tax:</dt>
+					<dd class="text-gray-800 font-semibold">$10.00</dd>
+				</dl>
+				<dl class="flex justify-between items-center mb-3">
+					<dt class="text-gray-600 text-lg font-semibold">Total:</dt>
+					<dd class="text-lg text-gray-900 font-bold">$59.97</dd>
+				</dl>
+				<hr class="my-4 border-gray-200">
+				<p class="flex justify-center mb-3">
+					<img src="{% static './images/misc/payments.png' %}" class="h-7">
+				</p>
+				<a href="./place-order.html" class="block w-full text-center bg-blue-600 text-white px-5 py-3 rounded-md font-semibold hover:bg-blue-700 transition-colors">
+					Checkout
+				</a>
+				<a href="./store.html" class="block w-full text-center mt-3 bg-gray-100 text-gray-700 px-5 py-3 rounded-md font-semibold hover:bg-gray-200 transition-colors">
+					Continue Shopping
+				</a>
+			</div>
+		</div>
+	</aside>
+</div>
+</div>
+</section>
+{% endblock %}
