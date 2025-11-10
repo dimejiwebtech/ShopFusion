@@ -19,33 +19,35 @@
 					</tr>
 				</thead>
 				<tbody class="divide-y divide-gray-200">
+                    {% for item in cart_items %}
 					<tr class="hover:bg-gray-50">
 						<td class="px-6 py-4">
 							<figure class="flex items-center space-x-4">
-								<div class="flex-shrink-0"><img src="{% static './images/items/11.jpg' %}" class="w-20 h-20 object-cover rounded-md"></div>
+								<div class="flex-shrink-0"><img src="{{ item.product.product_image.url }}" class="w-20 h-20 object-cover rounded-md"></div>
 								<figcaption class="flex-grow">
-									<a href="#" class="font-semibold text-gray-900 hover:text-blue-600">Camera Canon EOS M50 Kit</a>
-									<p class="text-sm text-gray-500">Matrix: 25 Mpx <br> Brand: Canon</p>
+									<a href="#" class="font-semibold text-gray-900 hover:text-blue-600">{{item.product.product_name}}</a>
+									<p class="text-sm text-gray-500">Color: 25 Mpx <br> Size: Canon</p>
 								</figcaption>
 							</figure>
 						</td>
 						<td class="px-6 py-4">
 							<div class="flex items-center border border-gray-300 rounded-md max-w-[120px]">
-								<button class="px-3 py-1 bg-gray-100 hover:bg-gray-200" type="button" id="button-plus"> <i class="fa fa-minus"></i> </button>
-								<input type="text" class="w-12 text-center border-l border-r focus:outline-none" value="1">
-								<button class="px-3 py-1 bg-gray-100 hover:bg-gray-200" type="button" id="button-minus"> <i class="fa fa-plus"></i> </button>
+								<a href="{% url 'remove_cart' item.product.id %}" class="px-3 py-1 bg-gray-100 hover:bg-gray-200" type="button" id="button-plus"> <i class="fa fa-minus"></i> </a>
+								<input type="text" class="w-12 text-center border-l border-r focus:outline-none" value="{{item.quantity}}">
+								<a href="{% url 'add_cart' item.product.id %}" class="px-3 py-1 bg-gray-100 hover:bg-gray-200" type="button" id="button-minus"> <i class="fa fa-plus"></i> </a>
 							</div>
 						</td>
 						<td class="px-6 py-4">
 							<div class="text-left">
-								<var class="block text-lg font-semibold text-gray-900">$1156.00</var>
-								<small class="block text-sm text-gray-500"> $315.20 each </small>
+								<var class="block text-lg font-semibold text-gray-900">${{ item.sub_total }}</var>
+								<small class="block text-sm text-gray-500"> ${{item.product.price}} each </small>
 							</div>
 						</td>
 						<td class="px-6 py-4 text-right">
-							<a href="" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 text-sm font-semibold"> Remove</a>
+							<a href="{% url 'delete_cart_item' item.product.id %}" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 text-sm font-semibold"> Remove</a>
 						</td>
 					</tr>
+                    {% endfor %}
 				</tbody>
 			</table>
 		</div>
@@ -56,15 +58,15 @@
 			<div class="p-6">
 				<dl class="flex justify-between items-center mb-2">
 					<dt class="text-gray-600">Total price:</dt>
-					<dd class="text-gray-800 font-semibold">$69.97</dd>
+					<dd class="text-gray-800 font-semibold">${{total}}</dd>
 				</dl>
 				<dl class="flex justify-between items-center mb-2">
 					<dt class="text-gray-600">Tax:</dt>
-					<dd class="text-gray-800 font-semibold">$10.00</dd>
+					<dd class="text-gray-800 font-semibold">${{tax}}</dd>
 				</dl>
 				<dl class="flex justify-between items-center mb-3">
-					<dt class="text-gray-600 text-lg font-semibold">Total:</dt>
-					<dd class="text-lg text-gray-900 font-bold">$59.97</dd>
+					<dt class="text-gray-600 text-lg font-semibold">Grand Total:</dt>
+					<dd class="text-lg text-gray-900 font-bold">${{grand_total}}</dd>
 				</dl>
 				<hr class="my-4 border-gray-200">
 				<p class="flex justify-center mb-3">
