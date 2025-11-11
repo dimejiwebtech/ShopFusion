@@ -81,9 +81,9 @@
 					</a>
 					
 					<!-- Cart -->
-					<a href="./cart.html" class="relative p-2 hover:bg-gray-100 rounded-lg transition">
+					<a href="{% url 'cart' %}" class="relative p-2 hover:bg-gray-100 rounded-lg transition">
 						<i class="fa fa-shopping-cart text-xl text-gray-700"></i>
-						<span class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+						<span class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{{cart_count}}</span>
 					</a>
 					
 					<!-- Mobile Menu Toggle -->

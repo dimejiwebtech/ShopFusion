@@ -8,11 +8,15 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('product_name', 'slug', 'price', 'stock', 'is_available', 'modified_date')
-    list_filter = ('is_available', 'created_date', 'modified_date')
+    list_display = ('product_name', 'slug', 'price', 'stock', 'is_available', 'display_categories')
+    list_filter = ('is_available', 'created_date', 'modified_date',)
     search_fields = ('product_name',)
     prepopulated_fields = {'slug': ('product_name',)}
     filter_horizontal = ('category',)
+
+    def display_categories(self, obj):
+        return ", ".join([cat.category_name for cat in obj.category.all()])
+    display_categories.short_description = 'Categories'
 
     fieldsets = [
         ('Basic Information', {

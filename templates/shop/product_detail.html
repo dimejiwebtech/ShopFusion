@@ -12,12 +12,12 @@
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
 			
 			<!-- Product Image -->
-			<div class="flex items-center justify-center bg-gray-50 rounded-lg p-4">
-				<img src="{{ product.product_image.url }}" class="w-full h-auto max-h-96 object-contain" alt="{{ product.product_name }}">
+			<div class="flex items-center justify-center min-h-[400px] lg:min-h-[500px] bg-gray-50 rounded-lg p-6">
+				<img src="{{ product.product_image.url }}" class="w-full h-full object-contain" alt="{{ product.product_name }}">
 			</div>
 
 			<!-- Product Info -->
-			<div class="flex flex-col">
+			<div>
 				<div class="mb-4">
 					<h1 class="text-3xl font-bold text-gray-900 mb-2">{{ product.product_name }}</h1>
 					
@@ -61,6 +61,68 @@
 				</div>
 
 				<hr class="border-gray-200 my-4">
+
+				<!-- Color Selection -->
+				<div class="mb-6">
+					<label class="block text-sm font-semibold text-gray-700 mb-3">Color</label>
+					<div class="flex flex-wrap gap-2">
+						<label class="relative cursor-pointer">
+							<input type="radio" name="color" class="peer hidden" checked>
+							<div class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition">
+								Silver
+							</div>
+						</label>
+						<label class="relative cursor-pointer">
+							<input type="radio" name="color" class="peer hidden">
+							<div class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition">
+								Gray
+							</div>
+						</label>
+						<label class="relative cursor-pointer">
+							<input type="radio" name="color" class="peer hidden">
+							<div class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition">
+								Gold
+							</div>
+						</label>
+						<label class="relative cursor-pointer">
+							<input type="radio" name="color" class="peer hidden">
+							<div class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition">
+								Black
+							</div>
+						</label>
+					</div>
+				</div>
+
+				<!-- Size Selection -->
+				<div class="mb-6">
+					<label class="block text-sm font-semibold text-gray-700 mb-3">Size</label>
+					<div class="flex flex-wrap gap-2">
+						<label class="relative cursor-pointer">
+							<input type="radio" name="size" class="peer hidden">
+							<div class="w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition font-semibold">
+								S
+							</div>
+						</label>
+						<label class="relative cursor-pointer">
+							<input type="radio" name="size" class="peer hidden" checked>
+							<div class="w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition font-semibold">
+								M
+							</div>
+						</label>
+						<label class="relative cursor-pointer">
+							<input type="radio" name="size" class="peer hidden">
+							<div class="w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition font-semibold">
+								L
+							</div>
+						</label>
+						<label class="relative cursor-pointer">
+							<input type="radio" name="size" class="peer hidden">
+							<div class="w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition font-semibold">
+								XL
+							</div>
+						</label>
+					</div>
+				</div>
 
 				<!-- Quantity Selector -->
 				<div class="mb-6">

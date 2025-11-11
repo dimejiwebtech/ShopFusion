@@ -95,9 +95,6 @@
 					
 					<!-- Quick Actions Overlay -->
 					<div class="absolute inset-0 bg-blue-200/50  group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
-						<button class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-700 hover:bg-blue-600 hover:text-white transition transform hover:scale-110 shadow-lg">
-							<i class="fa fa-eye"></i>
-						</button>
 						<button class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-700 hover:bg-red-500 hover:text-white transition transform hover:scale-110 shadow-lg">
 							<i class="fa fa-heart"></i>
 						</button>
@@ -135,8 +132,8 @@
 						<span class="text-xl font-bold text-gray-900">${{ product.price }}</span>
 						
 						<!-- Add to Cart Button -->
-						<a href="{% url 'add_cart' product.id %}" class="w-9 h-9 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center shadow-sm hover:shadow-md">
-							<i class="fa fa-shopping-cart text-sm"></i>
+						<a href="{{product.get_url}}" class="w-9 h-9 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center shadow-sm hover:shadow-md">
+							<i class="fas fa-eye text-sm"></i>
 						</a>
 					</div>
 				</div>

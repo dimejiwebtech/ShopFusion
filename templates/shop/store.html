@@ -140,7 +140,7 @@
 
 				<!-- Products Grid -->
 				<div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-					{% for product in products %}
+					{% for product in paged_product %}
 					<div class="group bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
 						<a href="{{ product.get_url }}" class="block relative overflow-hidden bg-gray-100">
 							<img src="{{ product.product_image.url }}" class="w-full h-48 md:h-64 object-cover group-hover:scale-105 transition-transform duration-300" alt="{{product.product_name}}">
@@ -167,44 +167,57 @@
 									<span class="text-gray-500 ml-1">(4.5)</span>
 								</div>
 							</div>
-							<a href="{% url 'add_cart' product.id %}" class="w-full py-2.5 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-								<i class="fa fa-shopping-cart"></i>
-								<span class="text-sm">Add to Cart</span>
+							<a href="{{product.get_url}}" class="w-full py-2.5 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+								<i class="fas fa-eye"></i>
+								<span class="text-sm">View Product</span>
 							</a>
 						</div>
 					</div>
 					{% endfor %}
 				</div>
 
-				<!-- Pagination -->
-				{% if products %}
+				{% if paged_product %}
 				<nav class="mt-8 flex justify-center" aria-label="Pagination">
 					<ul class="flex items-center gap-2">
+						{% if paged_product.has_previous %}
 						<li>
-							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-400 cursor-not-allowed bg-gray-50" href="#">
+							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" href="?page={{ paged_product.previous_page_number }}">
 								<i class="fa fa-chevron-left"></i>
 							</a>
 						</li>
+						{% else %}
 						<li>
-							<a class="px-4 py-2 border border-blue-600 bg-blue-600 text-white rounded-md font-medium" href="#">1</a>
+							<span class="px-4 py-2 border border-gray-300 rounded-md text-gray-400 cursor-not-allowed bg-gray-50">
+								<i class="fa fa-chevron-left"></i>
+							</span>
 						</li>
+						{% endif %}
+
+						{% for num in paged_product.paginator.page_range %}
+							{% if paged_product.number == num %}
+							<li>
+								<span class="px-4 py-2 border border-blue-600 bg-blue-600 text-white rounded-md font-medium">{{ num }}</span>
+							</li>
+							{% elif num > paged_product.number|add:'-3' and num < paged_product.number|add:'3' %}
+							<li>
+								<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" href="?page={{ num }}">{{ num }}</a>
+							</li>
+							{% endif %}
+						{% endfor %}
+
+						{% if paged_product.has_next %}
 						<li>
-							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" href="#">2</a>
-						</li>
-						<li>
-							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" href="#">3</a>
-						</li>
-						<li>
-							<span class="px-2 text-gray-500">...</span>
-						</li>
-						<li>
-							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" href="#">10</a>
-						</li>
-						<li>
-							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-blue-600 hover:text-white transition" href="#">
+							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-blue-600 hover:text-white transition" href="?page={{ paged_product.next_page_number }}">
 								<i class="fa fa-chevron-right"></i>
 							</a>
 						</li>
+						{% else %}
+						<li>
+							<span class="px-4 py-2 border border-gray-300 rounded-md text-gray-400 cursor-not-allowed bg-gray-50">
+								<i class="fa fa-chevron-right"></i>
+							</span>
+						</li>
+						{% endif %}
 					</ul>
 				</nav>
 				{% endif %}
