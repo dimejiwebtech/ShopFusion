@@ -2,7 +2,13 @@
 
 {% load static %}
 
-{% block title %}Store - ShopFusion{% endblock %}
+{% block title %}
+    {% if 'search' in request.path %}
+        Search Results for {{ search_query }} - ShopFusion
+    {% else %}
+        Store - ShopFusion
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 <!-- Breadcrumb -->
@@ -140,6 +146,7 @@
 
 				<!-- Products Grid -->
 				<div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+					{% if paged_product %}
 					{% for product in paged_product %}
 					<div class="group bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
 						<a href="{{ product.get_url }}" class="block relative overflow-hidden bg-gray-100">
@@ -175,6 +182,11 @@
 					</div>
 					{% endfor %}
 				</div>
+				{% else %}
+				<section>
+				<h2 class="text-3xl font-bold">Nothing Found Here</h2>
+			</section>
+			{% endif %}
 
 				{% if paged_product %}
 				<nav class="mt-8 flex justify-center" aria-label="Pagination">

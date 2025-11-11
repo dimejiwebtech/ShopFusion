@@ -53,9 +53,9 @@
 				</a>
 				
 				<!-- Search Bar -->
-				<form action="#" class="hidden md:flex flex-1 max-w-2xl mx-6">
+				<form action="{% url 'search' %}" class="hidden md:flex flex-1 max-w-2xl mx-6" method="GET">
 					<div class="flex w-full border-2 border-blue-600 rounded-lg overflow-hidden">
-						<input type="text" class="flex-1 px-4 py-2.5 focus:outline-none" placeholder="Search for products...">
+						<input type="text" class="flex-1 px-4 py-2.5 focus:outline-none" placeholder="Search for products..." name="search-query">
 						<button class="px-6 bg-blue-600 text-white hover:bg-blue-700 transition" type="submit">
 							<i class="fa fa-search"></i>
 						</button>
@@ -94,9 +94,9 @@
 			</div>
 			
 			<!-- Mobile Search -->
-			<form action="#" class="md:hidden mt-3">
+			<form action="{% url 'search' %}" class="md:hidden mt-3" method="GET">
 				<div class="flex w-full border-2 border-blue-600 rounded-lg overflow-hidden">
-					<input type="text" class="flex-1 px-3 py-2 focus:outline-none" placeholder="Search...">
+					<input type="text" class="flex-1 px-3 py-2 focus:outline-none" placeholder="Search..." name="search-query">
 					<button class="px-4 bg-blue-600 text-white hover:bg-blue-700 transition" type="submit">
 						<i class="fa fa-search"></i>
 					</button>

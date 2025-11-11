@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-
 from carts.models import CartItem
 from carts.views import _cart_id
 from shop.models import Category, Product
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Q
 
 def home(request):
     products = Product.objects.all().filter(is_available=True)
@@ -52,3 +52,26 @@ def product_detail(request, category_slug, product_slug):
         'in_cart': in_cart,
     }
     return render(request, 'shop/product_detail.html', context)
+
+def product_search(request):
+    if 'search-query' in request.GET:
+        search_query = request.GET['search-query']
+        if search_query:
+            products = Product.objects.filter(
+                Q(product_name__icontains=search_query) | 
+                Q(short_description__icontains=search_query) |
+                Q(product_content__icontains=search_query),
+                is_available=True
+            ).order_by('-created_date')
+    
+    paginator = Paginator(products, 6)
+    page = request.GET.get('page')
+    paged_product = paginator.get_page(page)
+    
+    context = {
+        'products': products,
+        'paged_product': paged_product,
+        'product_count': products.count(),
+        'search_query': search_query,
+    }
+    return render(request, 'shop/store.html', context)
