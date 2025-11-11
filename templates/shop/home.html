@@ -69,26 +69,84 @@
 		</div>
 	</div>
 </section>
-<section class="py-8">
-	<div class="container mx-auto px-4">
 
-		<header class="flex justify-between items-center mb-6">
-			<h3 class="text-2xl font-bold text-gray-900">Popular products</h3>
-			<a href="{% url 'store' %}" class="px-5 py-2 border border-blue-600 text-blue-600 font-semibold rounded-md hover:bg-blue-600 hover:text-white transition-colors">See all</a>
+<section class="py-12 bg-gray-50">
+	<div class="max-w-7xl mx-auto px-4">
+
+		<header class="flex justify-between items-center mb-8">
+			<div>
+				<h3 class="text-3xl font-bold text-gray-900">Explore Products</h3>
+				<p class="text-gray-600 mt-1">Discover our best-selling items</p>
+			</div>
+			<a href="{% url 'store' %}" class="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow-md">
+				View All <i class="fa fa-arrow-right ml-1"></i>
+			</a>
 		</header>
 
-		<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
 			{% for product in products %}
-				{% if forloop.counter >= 8 %}
-			<div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transform transition-transform hover:shadow-lg hover:-translate-y-1">
-				<a href="{{ product.get_url }}" class="block aspect-w-16 aspect-h-16"> <img src="{{ product.product_image.url }}" class="w-full h-full object-cover">
+				{% if forloop.counter <= 8 %}
+			<article class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
+				<!-- Product Image -->
+				<a href="{{ product.get_url }}" class="block relative overflow-hidden bg-gray-100 aspect-square">
+					<img src="{{ product.product_image.url }}" 
+					     alt="{{ product.product_name }}" 
+					     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+					
+					<!-- Quick Actions Overlay -->
+					<div class="absolute inset-0 bg-blue-200/50  group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+						<button class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-700 hover:bg-blue-600 hover:text-white transition transform hover:scale-110 shadow-lg">
+							<i class="fa fa-eye"></i>
+						</button>
+						<button class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-700 hover:bg-red-500 hover:text-white transition transform hover:scale-110 shadow-lg">
+							<i class="fa fa-heart"></i>
+						</button>
+					</div>
 				</a>
-				<figcaption class="p-4">
-					<a href="{{ product.get_url }}" class="block text-gray-800 hover:text-blue-600 font-semibold truncate mb-1" title="Just another product name">{{product.product_name}}</a>
-					<div class="text-xl font-bold text-gray-900 mt-1">${{product.price}}</div>
-				</figcaption>
-			</div>
+				
+				<!-- Product Info -->
+				<div class="p-4">
+					<!-- Category -->
+					{% if product.category %}
+					<a href="#" class="text-xs text-gray-500 hover:text-blue-600 uppercase tracking-wide">
+						{{ product.category.category_name }}
+					</a>
+					{% endif %}
+					
+					<!-- Product Name -->
+					<a href="{{ product.get_url }}" class="block mt-2 text-gray-900 font-semibold hover:text-blue-600 transition line-clamp-2 leading-tight" title="{{ product.product_name }}">
+						{{ product.product_name }}
+					</a>
+					
+					<!-- Rating -->
+					<div class="flex items-center gap-1 mt-2">
+						<div class="flex text-yellow-400 text-sm">
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="far fa-star"></i>
+						</div>
+						<span class="text-xs text-gray-500 ml-1">(4.0)</span>
+					</div>
+					
+					<!-- Price -->
+					<div class="flex items-center justify-between mt-3">
+						<span class="text-xl font-bold text-gray-900">${{ product.price }}</span>
+						
+						<!-- Add to Cart Button -->
+						<a href="{% url 'add_cart' product.id %}" class="w-9 h-9 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center shadow-sm hover:shadow-md">
+							<i class="fa fa-shopping-cart text-sm"></i>
+						</a>
+					</div>
+				</div>
+			</article>
 				{% endif %}
+			{% empty %}
+			<div class="col-span-full text-center py-12">
+				<i class="fa fa-box-open text-6xl text-gray-300 mb-4"></i>
+				<p class="text-gray-500 text-lg">No products available</p>
+			</div>
 			{% endfor %}
 		</div>
 	</div>

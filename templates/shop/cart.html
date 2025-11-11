@@ -1,87 +1,145 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
 {% block content %}
-<section class="py-8 bg-gray-100">
-<div class="container mx-auto px-4">
+<section class="py-8 bg-gray-50">
+<div class="max-w-7xl mx-auto px-4">
 
-<div class="flex flex-wrap -mx-4">
-	<aside class="w-full lg:w-3/4 px-4">
-		<div class="bg-white shadow-md rounded-lg overflow-hidden">
-			<table class="w-full">
-				<thead class="border-b border-gray-200">
-					<tr class="text-xs text-gray-500 uppercase font-semibold">
-						<th scope="col" class="px-6 py-3 text-left">Product</th>
-						<th scope="col" class="px-6 py-3 text-left" style="width:120px;">Quantity</th>
-						<th scope="col" class="px-6 py-3 text-left" style="width:120px;">Price</th>
-						<th scope="col" class="px-6 py-3 text-right" style="width:200px;"></th>
-					</tr>
-				</thead>
-				<tbody class="divide-y divide-gray-200">
-                    {% for item in cart_items %}
-					<tr class="hover:bg-gray-50">
-						<td class="px-6 py-4">
-							<figure class="flex items-center space-x-4">
-								<div class="flex-shrink-0"><img src="{{ item.product.product_image.url }}" class="w-20 h-20 object-cover rounded-md"></div>
-								<figcaption class="flex-grow">
-									<a href="#" class="font-semibold text-gray-900 hover:text-blue-600">{{item.product.product_name}}</a>
-									<p class="text-sm text-gray-500">Color: 25 Mpx <br> Size: Canon</p>
-								</figcaption>
-							</figure>
-						</td>
-						<td class="px-6 py-4">
-							<div class="flex items-center border border-gray-300 rounded-md max-w-[120px]">
-								<a href="{% url 'remove_cart' item.product.id %}" class="px-3 py-1 bg-gray-100 hover:bg-gray-200" type="button" id="button-plus"> <i class="fa fa-minus"></i> </a>
-								<input type="text" class="w-12 text-center border-l border-r focus:outline-none" value="{{item.quantity}}">
-								<a href="{% url 'add_cart' item.product.id %}" class="px-3 py-1 bg-gray-100 hover:bg-gray-200" type="button" id="button-minus"> <i class="fa fa-plus"></i> </a>
-							</div>
-						</td>
-						<td class="px-6 py-4">
-							<div class="text-left">
-								<var class="block text-lg font-semibold text-gray-900">${{ item.sub_total }}</var>
-								<small class="block text-sm text-gray-500"> ${{item.product.price}} each </small>
-							</div>
-						</td>
-						<td class="px-6 py-4 text-right">
-							<a href="{% url 'delete_cart_item' item.product.id %}" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 text-sm font-semibold"> Remove</a>
-						</td>
-					</tr>
-                    {% endfor %}
-				</tbody>
-			</table>
+	<!-- Page Header -->
+	<div class="mb-6">
+		<h1 class="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+		<p class="text-gray-600 mt-1">Review your items before checkout</p>
+	</div>
+
+	{% if not cart_items %}
+	<!-- Empty Cart State -->
+	<div class="bg-white rounded-lg shadow-sm p-12 text-center">
+		<div class="max-w-md mx-auto">
+			<i class="fa fa-shopping-cart text-gray-300 text-6xl mb-4"></i>
+			<h2 class="text-2xl font-bold text-gray-900 mb-2">Your Cart is Empty</h2>
+			<p class="text-gray-600 mb-6">Looks like you haven't added any items to your cart yet.</p>
+			<a href="{% url 'store' %}" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition shadow-sm hover:shadow-md">
+				<i class="fa fa-shopping-bag mr-2"></i> Start Shopping
+			</a>
 		</div>
-	</aside>
-	
-	<aside class="w-full lg:w-1/4 px-4 mt-6 lg:mt-0">
-		<div class="bg-white shadow-md rounded-lg">
-			<div class="p-6">
-				<dl class="flex justify-between items-center mb-2">
-					<dt class="text-gray-600">Total price:</dt>
-					<dd class="text-gray-800 font-semibold">${{total}}</dd>
-				</dl>
-				<dl class="flex justify-between items-center mb-2">
-					<dt class="text-gray-600">Tax:</dt>
-					<dd class="text-gray-800 font-semibold">${{tax}}</dd>
-				</dl>
-				<dl class="flex justify-between items-center mb-3">
-					<dt class="text-gray-600 text-lg font-semibold">Grand Total:</dt>
-					<dd class="text-lg text-gray-900 font-bold">${{grand_total}}</dd>
-				</dl>
-				<hr class="my-4 border-gray-200">
-				<p class="flex justify-center mb-3">
-					<img src="{% static './images/misc/payments.png' %}" class="h-7">
-				</p>
-				<a href="./place-order.html" class="block w-full text-center bg-blue-600 text-white px-5 py-3 rounded-md font-semibold hover:bg-blue-700 transition-colors">
-					Checkout
-				</a>
-				<a href="./store.html" class="block w-full text-center mt-3 bg-gray-100 text-gray-700 px-5 py-3 rounded-md font-semibold hover:bg-gray-200 transition-colors">
-					Continue Shopping
-				</a>
+	</div>
+	{% else %}
+	<!-- Cart Items -->
+	<div class="flex flex-wrap lg:flex-nowrap gap-6">
+		<!-- Cart Table -->
+		<div class="w-full lg:flex-1">
+			<div class="bg-white shadow-sm rounded-lg overflow-hidden">
+				<div class="overflow-x-auto">
+					<table class="w-full">
+						<thead class="bg-gray-50 border-b border-gray-200">
+							<tr class="text-xs text-gray-600 uppercase font-semibold">
+								<th scope="col" class="px-6 py-4 text-left">Product</th>
+								<th scope="col" class="px-6 py-4 text-center w-32">Quantity</th>
+								<th scope="col" class="px-6 py-4 text-left w-32">Price</th>
+								<th scope="col" class="px-6 py-4 text-center w-20">Action</th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-gray-200">
+							{% for item in cart_items %}
+							<tr class="hover:bg-gray-50 transition">
+								<td class="px-6 py-4">
+									<div class="flex items-center gap-4">
+										<div class="flex-shrink-0 w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
+											<img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" class="w-full h-full object-cover">
+										</div>
+										<div class="flex-1 min-w-0">
+											<a href="{{ item.product.get_url }}" class="font-semibold text-gray-900 hover:text-blue-600 transition block truncate">
+												{{ item.product.product_name }}
+											</a>
+											<p class="text-sm text-gray-500 mt-1">
+												SKU: #{{ item.product.id }}
+											</p>
+										</div>
+									</div>
+								</td>
+								<td class="px-6 py-4">
+									<div class="flex items-center justify-center border border-gray-300 rounded-lg overflow-hidden w-28 mx-auto">
+										<a href="{% url 'remove_cart' item.product.id %}" class="px-3 py-2 bg-gray-50 hover:bg-gray-200 transition flex-1 text-center">
+											<i class="fa fa-minus text-sm"></i>
+										</a>
+										<input type="text" class="w-12 text-center border-x border-gray-300 py-2 focus:outline-none font-semibold" value="{{ item.quantity }}" readonly>
+										<a href="{% url 'add_cart' item.product.id %}" class="px-3 py-2 bg-gray-50 hover:bg-gray-200 transition flex-1 text-center">
+											<i class="fa fa-plus text-sm"></i>
+										</a>
+									</div>
+								</td>
+								<td class="px-6 py-4">
+									<div class="text-left">
+										<p class="text-lg font-bold text-gray-900">${{ item.sub_total }}</p>
+										<p class="text-sm text-gray-500">${{ item.product.price }} each</p>
+									</div>
+								</td>
+								<td class="px-6 py-4 text-center">
+									<a href="{% url 'delete_cart_item' item.product.id %}" class="inline-flex items-center justify-center w-10 h-10 bg-red-100 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition">
+										<i class="fa fa-trash"></i>
+									</a>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
-	</aside>
-</div>
+		
+		<!-- Order Summary -->
+		<aside class="w-full lg:w-96">
+			<div class="bg-white shadow-sm rounded-lg sticky top-24">
+				<div class="p-6">
+					<h3 class="text-lg font-bold text-gray-900 mb-4">Order Summary</h3>
+					
+					<div class="space-y-3 mb-4">
+						<div class="flex justify-between items-center text-gray-700">
+							<span>Subtotal ({{ cart_items|length }} item{{ cart_items|length|pluralize }})</span>
+							<span class="font-semibold">${{ total }}</span>
+						</div>
+						<div class="flex justify-between items-center text-gray-700">
+							<span>Tax</span>
+							<span class="font-semibold">${{ tax }}</span>
+						</div>
+						<div class="flex justify-between items-center text-gray-700">
+							<span>Shipping</span>
+							<span class="text-green-600 font-semibold">FREE</span>
+						</div>
+					</div>
+					
+					<hr class="my-4 border-gray-200">
+					
+					<div class="flex justify-between items-center mb-6">
+						<span class="text-lg font-bold text-gray-900">Grand Total</span>
+						<span class="text-2xl font-bold text-blue-600">${{ grand_total }}</span>
+					</div>
+					
+					<div class="flex items-center justify-center gap-2 mb-6 text-gray-500 text-sm">
+						<i class="fab fa-cc-visa text-2xl text-blue-600"></i>
+						<i class="fab fa-cc-mastercard text-2xl text-red-600"></i>
+						<i class="fab fa-cc-paypal text-2xl text-blue-500"></i>
+						<i class="fab fa-cc-amex text-2xl text-blue-400"></i>
+					</div>
+					
+					<a href="./place-order.html" class="block w-full text-center bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition shadow-sm hover:shadow-md mb-3">
+						<i class="fa fa-lock mr-2"></i> Proceed to Checkout
+					</a>
+					
+					<a href="{% url 'store' %}" class="block w-full text-center bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition">
+						<i class="fa fa-arrow-left mr-2"></i> Continue Shopping
+					</a>
+					
+					<div class="mt-4 p-3 bg-green-50 rounded-lg">
+						<p class="text-xs text-green-800 text-center">
+							<i class="fa fa-shipping-fast mr-1"></i> Free shipping on orders over $50
+						</p>
+					</div>
+				</div>
+			</div>
+		</aside>
+	</div>
+	{% endif %}
 </div>
 </section>
 {% endblock %}

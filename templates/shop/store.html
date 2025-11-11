@@ -5,135 +5,211 @@
 {% block title %}Store - ShopFusion{% endblock %}
 
 {% block content %}
-<section class="py-8 bg-gray-100">
-	<div class="container mx-auto px-4">
-		<h2 class="text-3xl font-bold text-gray-900">Our Store</h2>
+<!-- Breadcrumb -->
+<section class="bg-gray-100 py-3">
+	<div class="max-w-7xl mx-auto px-4">
+		<nav class="text-sm text-gray-600">
+			<a href="/" class="hover:text-blue-600">Home</a>
+			<span class="mx-2">/</span>
+			<span class="text-gray-900 font-medium">Shop</span>
+		</nav>
 	</div>
 </section>
-<section class="py-12">
-<div class="container mx-auto px-4">
 
-<div class="flex flex-wrap md:flex-nowrap gap-6">
-	<aside class="w-full md:w-1/4">		
-		<div class="bg-white border border-gray-200 rounded-lg shadow-sm">
-			<article class="border-b border-gray-200">
-				<header class="p-4 cursor-pointer flex justify-between items-center">
-					<h6 class="font-semibold text-gray-800">Categories</h6>
-					<i class="fa fa-chevron-down text-gray-500"></i>
-				</header>
-				<div class="p-4" id="collapse_1">
-					<ul class="space-y-2">
-                        <li><a href="{% url 'store' %}" class="text-gray-700 hover:text-blue-600 block">All Products</a></li>
-                        {% for category in categories %}
-						<li><a href="{{category.get_url}}" class="text-gray-700 hover:text-blue-600 block">{{category.category_name}}</a></li>
-                        {% endfor %}
+<section class="py-8">
+	<div class="max-w-7xl mx-auto px-4">
+		<div class="flex flex-col lg:flex-row gap-6">
+			
+			<!-- Sidebar Filters -->
+			<aside class="w-full lg:w-64 flex-shrink-0">
+				<!-- Categories -->
+				<div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
+					<h3 class="px-4 py-3 font-semibold text-gray-900 border-b border-gray-200">Categories</h3>
+					<ul class="p-2">
+						<li>
+							<a href="{% url 'store' %}" class="flex items-center justify-between px-3 py-2.5 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
+								<span>All Products</span>
+								<i class="fa fa-chevron-right text-xs"></i>
+							</a>
+						</li>
+						{% for category in categories %}
+						<li>
+							<a href="{{category.get_url}}" class="flex items-center justify-between px-3 py-2.5 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
+								<span>{{category.category_name}}</span>
+								<i class="fa fa-chevron-right text-xs"></i>
+							</a>
+						</li>
+						{% endfor %}
 					</ul>
 				</div>
-			</article>
 
-			<article class="border-b border-gray-200">
-				<header class="p-4 cursor-pointer flex justify-between items-center">
-					<h6 class="font-semibold text-gray-800">Sizes</h6>
-					<i class="fa fa-chevron-down text-gray-500"></i>
-				</header>
-				<div class="p-4" id="collapse_4">
-					<div class="flex flex-wrap gap-2">
-						<label class="checkbox-btn">
-							<input type="checkbox" class="hidden">
-							<span class="px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-gray-700 hover:bg-gray-100 text-sm">XS</span>
-						</label>
-						<label class="checkbox-btn">
-							<input type="checkbox" class="hidden">
-							<span class="px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-gray-700 hover:bg-gray-100 text-sm">SM</span>
-						</label>
-						<label class="checkbox-btn">
-							<input type="checkbox" class="hidden">
-							<span class="px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-gray-700 hover:bg-gray-100 text-sm">LG</span>
-						</label>
-						<label class="checkbox-btn">
-							<input type="checkbox" class="hidden">
-							<span class="px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-gray-700 hover:bg-gray-100 text-sm">XXL</span>
-						</label>
-					</div>
-				</div>
-			</article>
-	
-			<article class="border-b border-gray-200">
-				<header class="p-4 cursor-pointer flex justify-between items-center">
-					<h6 class="font-semibold text-gray-800">Price range</h6>
-					<i class="fa fa-chevron-down text-gray-500"></i>
-				</header>
-				<div class="p-4" id="collapse_3">
-					<div class="flex space-x-4 mb-4">
-						<div class="flex-1">
-							<label class="block text-sm text-gray-600 mb-1">Min</label>
-							<select class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-								<option value="0">$0</option>
-								<option value="50">$50</option>
-								<option value="100">$100</option>
-								<option value="150">$150</option>
-								<option value="200">$200</option>
-								<option value="500">$500</option>
-								<option value="1000">$1000</option>
-							</select>
-						</div>
-						<div class="flex-1">
-							<label class="block text-sm text-gray-600 mb-1">Max</label>
-							<select class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-								<option value="50">$50</option>
-								<option value="100">$100</option>
-								<option value="150">$150</option>
-								<option value="200">$200</option>
-								<option value="500">$500</option>
-								<option value="1000">$1000</option>
-								<option value="2000">$2000+</option>
-							</select>
+				<!-- Price Range -->
+				<div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
+					<h3 class="px-4 py-3 font-semibold text-gray-900 border-b border-gray-200">Price Range</h3>
+					<div class="p-4">
+						<div class="space-y-3">
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Min Price</label>
+								<select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+									<option value="0">$0</option>
+									<option value="50">$50</option>
+									<option value="100">$100</option>
+									<option value="200">$200</option>
+									<option value="500">$500</option>
+								</select>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-1">Max Price</label>
+								<select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+									<option value="100">$100</option>
+									<option value="200">$200</option>
+									<option value="500">$500</option>
+									<option value="1000">$1000</option>
+									<option value="2000">$2000+</option>
+								</select>
+							</div>
+							<button class="w-full py-2.5 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition">
+								Apply Filter
+							</button>
 						</div>
 					</div>
-					<button class="block w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">Apply</button>
 				</div>
-			</article>
+
+				<!-- Sizes -->
+				<div class="bg-white rounded-lg shadow-sm border border-gray-200">
+					<h3 class="px-4 py-3 font-semibold text-gray-900 border-b border-gray-200">Sizes</h3>
+					<div class="p-4">
+						<div class="grid grid-cols-3 gap-2">
+							<label class="cursor-pointer">
+								<input type="checkbox" class="hidden peer">
+								<span class="block text-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 hover:border-blue-400 transition">XS</span>
+							</label>
+							<label class="cursor-pointer">
+								<input type="checkbox" class="hidden peer">
+								<span class="block text-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 hover:border-blue-400 transition">SM</span>
+							</label>
+							<label class="cursor-pointer">
+								<input type="checkbox" class="hidden peer">
+								<span class="block text-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 hover:border-blue-400 transition">MD</span>
+							</label>
+							<label class="cursor-pointer">
+								<input type="checkbox" class="hidden peer">
+								<span class="block text-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 hover:border-blue-400 transition">LG</span>
+							</label>
+							<label class="cursor-pointer">
+								<input type="checkbox" class="hidden peer">
+								<span class="block text-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 hover:border-blue-400 transition">XL</span>
+							</label>
+							<label class="cursor-pointer">
+								<input type="checkbox" class="hidden peer">
+								<span class="block text-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 hover:border-blue-400 transition">XXL</span>
+							</label>
+						</div>
+					</div>
+				</div>
+			</aside>
+
+			<!-- Products Grid -->
+			<main class="flex-1">
+				<!-- Toolbar -->
+				<div class="flex flex-col md:flex-row md:items-center md:justify-between bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+					<div class="mb-3 md:mb-0">
+						<span class="text-gray-700"><span class="font-semibold text-gray-900">{{product_count}}</span> Products Found</span>
+					</div>
+					<div class="flex flex-col md:flex-row gap-3">
+						<div class="flex items-center gap-2">
+							<label class="text-sm text-gray-700">Sort by:</label>
+							<select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+								<option>Featured</option>
+								<option>Price: Low to High</option>
+								<option>Price: High to Low</option>
+								<option>Newest</option>
+								<option>Best Selling</option>
+							</select>
+						</div>
+						<div class="flex gap-2">
+							<button class="px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition">
+								<i class="fa fa-th-large text-gray-600"></i>
+							</button>
+							<button class="px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition">
+								<i class="fa fa-list text-gray-600"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- Products Grid -->
+				<div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+					{% for product in products %}
+					<div class="group bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
+						<a href="{{ product.get_url }}" class="block relative overflow-hidden bg-gray-100">
+							<img src="{{ product.product_image.url }}" class="w-full h-48 md:h-64 object-cover group-hover:scale-105 transition-transform duration-300" alt="{{product.product_name}}">
+							<div class="absolute top-2 right-2">
+								<button class="w-9 h-9 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
+									<i class="fa fa-heart text-sm"></i>
+								</button>
+							</div>
+						</a>
+						<div class="p-3 md:p-4">
+							<a href="{{ product.get_url }}" class="block">
+								<h3 class="text-sm md:text-base font-semibold text-gray-900 hover:text-blue-600 transition line-clamp-2 mb-2 h-10 md:h-12">
+									{{product.product_name}}
+								</h3>
+							</a>
+							<div class="flex items-center justify-between mb-3">
+								<span class="text-lg md:text-xl font-bold text-gray-900">${{product.price}}</span>
+								<div class="flex items-center text-yellow-400 text-xs">
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star-half-alt"></i>
+									<span class="text-gray-500 ml-1">(4.5)</span>
+								</div>
+							</div>
+							<a href="{% url 'add_cart' product.id %}" class="w-full py-2.5 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+								<i class="fa fa-shopping-cart"></i>
+								<span class="text-sm">Add to Cart</span>
+							</a>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+
+				<!-- Pagination -->
+				{% if products %}
+				<nav class="mt-8 flex justify-center" aria-label="Pagination">
+					<ul class="flex items-center gap-2">
+						<li>
+							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-400 cursor-not-allowed bg-gray-50" href="#">
+								<i class="fa fa-chevron-left"></i>
+							</a>
+						</li>
+						<li>
+							<a class="px-4 py-2 border border-blue-600 bg-blue-600 text-white rounded-md font-medium" href="#">1</a>
+						</li>
+						<li>
+							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" href="#">2</a>
+						</li>
+						<li>
+							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" href="#">3</a>
+						</li>
+						<li>
+							<span class="px-2 text-gray-500">...</span>
+						</li>
+						<li>
+							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" href="#">10</a>
+						</li>
+						<li>
+							<a class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-blue-600 hover:text-white transition" href="#">
+								<i class="fa fa-chevron-right"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+				{% endif %}
+			</main>
 		</div>
-	</aside>
-
-	<main class="w-full md:w-3/4">
-
-		<header class="border-b border-gray-200 mb-4 pb-3">
-			<div class="flex items-center">
-				<span class="md:mr-auto text-gray-700"><b>{{product_count }}</b> Products Available </span>
-			</div>
-		</header>
-
-		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for product in products %}
-			<div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-				<a href="{{ product.get_url }}" class="block relative overflow-hidden">
-					<img src="{{ product.product_image.url }}" class="w-full h-48 object-cover" alt="Product">
-				</a>
-				<figcaption class="p-4">
-					<div style="height: 6rem;"> <a href="{{ product.get_url }}" class="block text-gray-800 hover:text-blue-600 font-semibold mb-1">{{product.product_name}}</a>
-						<div class="mt-2">
-							<span class="text-lg font-bold text-gray-900">${{product.price}}</span>
-						</div>
-					</div>
-					<a href="#" class="block w-full text-center mt-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">Add to Cart</a>
-				</figcaption>
-			</div>
-			{% endfor %}
-			</div> 
-            <nav class="mt-8" aria-label="Page navigation">
-			<ul class="flex justify-center space-x-1">
-				<li><a class="block px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-400 cursor-not-allowed" href="#">Previous</a></li>
-				<li><a class="block px-4 py-2 border border-blue-600 rounded-md bg-blue-600 text-white" href="#">1</a></li>
-				<li><a class="block px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100" href="#">2</a></li>
-				<li><a class="block px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100" href="#">3</a></li>
-				<li><a class="block px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100" href="#">Next</a></li>
-			</ul>
-		</nav>
-
-	</main>
-</div>
-
-</div>
+	</div>
 </section>
 {% endblock %}
