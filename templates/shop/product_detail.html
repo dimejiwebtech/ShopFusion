@@ -17,187 +17,126 @@
 			</div>
 
 			<!-- Product Info -->
-			<div>
-				<div class="mb-4">
-					<h1 class="text-3xl font-bold text-gray-900 mb-2">{{ product.product_name }}</h1>
-					
-					<!-- Rating & Reviews -->
-					<div class="flex items-center gap-2 mb-3">
-						<div class="flex text-yellow-400">
-							<i class="fas fa-star"></i>
-							<i class="fas fa-star"></i>
-							<i class="fas fa-star"></i>
-							<i class="fas fa-star"></i>
-							<i class="fas fa-star-half-alt"></i>
+			 <form action="{% url 'add_cart' product.id %}" method="POST">
+				{% csrf_token %}
+				<div>
+					<div class="mb-4">
+						<h1 class="text-3xl font-bold text-gray-900 mb-2">{{ product.product_name }}</h1>
+						
+						<!-- Rating & Reviews -->
+						<div class="flex items-center gap-2 mb-3">
+							<div class="flex text-yellow-400">
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star-half-alt"></i>
+							</div>
+							<span class="text-gray-600 text-sm">(4.5)</span>
+							<span class="text-gray-400 text-sm">|</span>
+							<a href="#reviews" class="text-blue-600 text-sm hover:underline">128 Reviews</a>
 						</div>
-						<span class="text-gray-600 text-sm">(4.5)</span>
-						<span class="text-gray-400 text-sm">|</span>
-						<a href="#reviews" class="text-blue-600 text-sm hover:underline">128 Reviews</a>
+
+						<!-- Price -->
+						<div class="mb-4">
+							<span class="text-4xl font-bold text-gray-900">${{ product.price }}</span>
+						</div>
+
+						<!-- Stock Status -->
+						<div class="mb-4">
+							{% if product.stock > 0 %}
+								<span class="inline-flex items-center gap-1 text-green-600 font-medium">
+									<i class="fas fa-check-circle"></i> In Stock
+								</span>
+								<span class="text-gray-500 text-sm ml-2">({{ product.stock }} available)</span>
+							{% else %}
+								<span class="inline-flex items-center gap-1 text-red-600 font-medium">
+									<i class="fas fa-times-circle"></i> Out of Stock
+								</span>
+							{% endif %}
+						</div>
 					</div>
 
-					<!-- Price -->
-					<div class="mb-4">
-						<span class="text-4xl font-bold text-gray-900">${{ product.price }}</span>
+					<!-- Short Description -->
+					<div class="mb-6">
+						<p class="text-gray-700 leading-relaxed">{{ product.short_description | safe }}</p>
 					</div>
 
-					<!-- Stock Status -->
-					<div class="mb-4">
-						{% if product.stock > 0 %}
-							<span class="inline-flex items-center gap-1 text-green-600 font-medium">
-								<i class="fas fa-check-circle"></i> In Stock
-							</span>
-							<span class="text-gray-500 text-sm ml-2">({{ product.stock }} available)</span>
+					<hr class="border-gray-200 my-4">
+
+					<!-- Color Selection -->
+					<div class="mb-6">
+						<label class="block text-sm font-semibold text-gray-700 mb-3">Color</label>
+						<select name="color" class="w-auto px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white text-gray-700 font-medium cursor-pointer hover:border-gray-400 transition" required>
+							<option value="" disabled selected>Select Color</option>
+							{% for color in product.variation_set.colors %}
+							<option value="{{ color.variation_value | lower }}">{{color.variation_value | capfirst }}</option>
+							{% endfor %}
+							
+						</select>
+					</div>
+
+					<!-- Size Selection -->
+					<div class="mb-6">
+						<label class="block text-sm font-semibold text-gray-700 mb-3">Size</label>
+						<select name="size" class="w-auto px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white text-gray-700 font-medium cursor-pointer hover:border-gray-400 transition" required>
+							<option value="" disabled selected>Select Size</option>
+							{% for size in product.variation_set.sizes %}
+							<option value="{{ size.variation_value | lower }}">{{ size.variation_value | capfirst }}</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<!-- Action Buttons -->
+					<div class="flex gap-3 mb-6">
+						{% if product.stock <= 0 %}
+							<button type="button" disabled class="bg-gray-400 text-gray-700 px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-not-allowed">
+								<i class="fas fa-ban"></i>
+								<span>Out of Stock</span>
+							</button>
 						{% else %}
-							<span class="inline-flex items-center gap-1 text-red-600 font-medium">
-								<i class="fas fa-times-circle"></i> Out of Stock
-							</span>
+							
+							<button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition">
+								<i class="fas fa-shopping-cart"></i>
+									<span>Add to Cart</span>
+							</button>
+							
 						{% endif %}
 					</div>
-				</div>
 
-				<!-- Short Description -->
-				<div class="mb-6">
-					<p class="text-gray-700 leading-relaxed">{{ product.short_description | safe }}</p>
-				</div>
-
-				<hr class="border-gray-200 my-4">
-
-				<!-- Color Selection -->
-				<div class="mb-6">
-					<label class="block text-sm font-semibold text-gray-700 mb-3">Color</label>
-					<div class="flex flex-wrap gap-2">
-						<label class="relative cursor-pointer">
-							<input type="radio" name="color" class="peer hidden" checked>
-							<div class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition">
-								Silver
-							</div>
-						</label>
-						<label class="relative cursor-pointer">
-							<input type="radio" name="color" class="peer hidden">
-							<div class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition">
-								Gray
-							</div>
-						</label>
-						<label class="relative cursor-pointer">
-							<input type="radio" name="color" class="peer hidden">
-							<div class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition">
-								Gold
-							</div>
-						</label>
-						<label class="relative cursor-pointer">
-							<input type="radio" name="color" class="peer hidden">
-							<div class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition">
-								Black
-							</div>
-						</label>
+					<!-- Product Meta -->
+					<div class="border-t border-gray-200 pt-4 space-y-2 text-sm">
+						<div class="flex gap-2">
+							<span class="font-semibold text-gray-700">SKU:</span>
+							<span class="text-gray-600">{{ product.sku|default:"N/A" }}</span>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-semibold text-gray-700">Category:</span>
+							<a href="#" class="text-blue-600 hover:underline">{{ product.category.name }}</a>
+						</div>
+						<div class="flex gap-2">
+							<span class="font-semibold text-gray-700">Tags:</span>
+							<span class="text-gray-600">Fashion, Clothing, Accessories</span>
+						</div>
 					</div>
-				</div>
 
-				<!-- Size Selection -->
-				<div class="mb-6">
-					<label class="block text-sm font-semibold text-gray-700 mb-3">Size</label>
-					<div class="flex flex-wrap gap-2">
-						<label class="relative cursor-pointer">
-							<input type="radio" name="size" class="peer hidden">
-							<div class="w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition font-semibold">
-								S
-							</div>
-						</label>
-						<label class="relative cursor-pointer">
-							<input type="radio" name="size" class="peer hidden" checked>
-							<div class="w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition font-semibold">
-								M
-							</div>
-						</label>
-						<label class="relative cursor-pointer">
-							<input type="radio" name="size" class="peer hidden">
-							<div class="w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition font-semibold">
-								L
-							</div>
-						</label>
-						<label class="relative cursor-pointer">
-							<input type="radio" name="size" class="peer hidden">
-							<div class="w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition font-semibold">
-								XL
-							</div>
-						</label>
-					</div>
-				</div>
-
-				<!-- Quantity Selector -->
-				<div class="mb-6">
-					<label class="block text-sm font-semibold text-gray-700 mb-2">Quantity</label>
-					<div class="flex items-center gap-3">
-						<div class="flex items-center border border-gray-300 rounded-lg">
-							<button type="button" class="px-4 py-2 hover:bg-gray-100 transition">
-								<i class="fas fa-minus text-gray-600"></i>
-							</button>
-							<input type="number" value="1" min="1" class="w-16 text-center border-x border-gray-300 py-2 focus:outline-none">
-							<button type="button" class="px-4 py-2 hover:bg-gray-100 transition">
-								<i class="fas fa-plus text-gray-600"></i>
-							</button>
+					<!-- Share -->
+					<div class="border-t border-gray-200 mt-4 pt-4">
+						<div class="flex items-center gap-3">
+							<span class="font-semibold text-gray-700 text-sm">Share:</span>
+							<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition">
+								<i class="fab fa-facebook-f text-sm"></i>
+							</a>
+							<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-sky-400 text-white hover:bg-sky-500 transition">
+								<i class="fab fa-twitter text-sm"></i>
+							</a>
+							<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-700 transition">
+								<i class="fab fa-whatsapp text-sm"></i>
+							</a>
 						</div>
 					</div>
 				</div>
-
-				<!-- Action Buttons -->
-                <div class="flex gap-3 mb-6">
-                    {% if product.stock <= 0 %}
-                        <button type="button" disabled class="bg-gray-400 text-gray-700 px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 cursor-not-allowed">
-                            <i class="fas fa-ban"></i>
-                            <span>Out of Stock</span>
-                        </button>
-                    {% else %}
-						{% if in_cart %}
-						 <button class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition" type="disabled">
-							<i class="fas fa-check"></i>
-								<span>Added to Cart</span>
-						</button>
-						 <a href="{% url 'cart' %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition" >
-							<i class="fas fa-eye"></i>
-								<span>View Cart</span>
-						</a>
-						 {% else %}
-						<a href="{% url 'add_cart' product.id %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition">
-							<i class="fas fa-shopping-cart"></i>
-								<span>Add to Cart</span>
-						</a>
-						{% endif %}
-                    {% endif %}
-                </div>
-
-				<!-- Product Meta -->
-				<div class="border-t border-gray-200 pt-4 space-y-2 text-sm">
-					<div class="flex gap-2">
-						<span class="font-semibold text-gray-700">SKU:</span>
-						<span class="text-gray-600">{{ product.sku|default:"N/A" }}</span>
-					</div>
-					<div class="flex gap-2">
-						<span class="font-semibold text-gray-700">Category:</span>
-						<a href="#" class="text-blue-600 hover:underline">{{ product.category.name }}</a>
-					</div>
-					<div class="flex gap-2">
-						<span class="font-semibold text-gray-700">Tags:</span>
-						<span class="text-gray-600">Fashion, Clothing, Accessories</span>
-					</div>
-				</div>
-
-				<!-- Share -->
-				<div class="border-t border-gray-200 mt-4 pt-4">
-					<div class="flex items-center gap-3">
-						<span class="font-semibold text-gray-700 text-sm">Share:</span>
-						<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition">
-							<i class="fab fa-facebook-f text-sm"></i>
-						</a>
-						<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-sky-400 text-white hover:bg-sky-500 transition">
-							<i class="fab fa-twitter text-sm"></i>
-						</a>
-						<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-700 transition">
-							<i class="fab fa-whatsapp text-sm"></i>
-						</a>
-					</div>
-				</div>
-			</div>
+		</form>
 		</div>
 	</div>
 

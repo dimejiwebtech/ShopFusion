@@ -52,6 +52,13 @@
 												{{ item.product.product_name }}
 											</a>
 											<p class="text-sm text-gray-500 mt-1">
+												{% if item.variations.all%}
+													{% for i in item.variations.all %}
+														{{i.variation_category | capfirst }} : {{i.variation_value | capfirst }} <br>
+													{% endfor %}
+												{% endif %}
+											</p>
+											<p class="text-sm text-gray-500 mt-1">
 												SKU: #{{ item.product.id }}
 											</p>
 										</div>
