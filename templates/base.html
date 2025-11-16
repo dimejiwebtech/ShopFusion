@@ -65,15 +65,38 @@
 				<!-- User Actions -->
 				<div class="flex items-center gap-3">
 					<!-- Account -->
+				{% if user.id is None %}
 					<div class="hidden lg:block text-right">
 						<div class="text-xs text-gray-500">Welcome!</div>
 						<div class="text-sm font-semibold">
-							<a href="./signin.html" class="text-gray-800 hover:text-blue-600">Sign In</a>
+							<a href="{% url 'login' %}" class="text-gray-800 hover:text-blue-600">Sign In</a>
 							<span class="text-gray-400 mx-1">/</span>
-							<a href="./register.html" class="text-gray-800 hover:text-blue-600">Register</a>
+							<a href="{% url 'register' %}" class="text-gray-800 hover:text-blue-600">Register</a>
 						</div>
 					</div>
-					
+				{% else %}
+					<div class="hidden lg:block relative group">
+						<button class="flex items-center gap-2 hover:bg-gray-100 px-3 py-2 rounded-lg transition">
+							<div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+								{{ user.first_name|first|upper }}
+							</div>
+							<span class="text-sm font-semibold text-gray-800">{{ user.first_name }}</span>
+							<i class="fa fa-chevron-down text-xs text-gray-500"></i>
+						</button>
+						
+						<div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+							<a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition border-b border-gray-100">
+								<i class="fa fa-user-circle w-4"></i>
+								<span class="font-medium">Dashboard</span>
+							</a>
+							<a href="{% url 'logout' %}" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
+								<i class="fa fa-sign-out-alt w-4"></i>
+								<span class="font-medium">Logout</span>
+							</a>
+						</div>
+					</div>
+				{% endif %}
+
 					<!-- Wishlist -->
 					<a href="#" class="hidden md:block relative p-2 hover:bg-gray-100 rounded-lg transition">
 						<i class="fa fa-heart text-xl text-gray-700"></i>
@@ -85,6 +108,7 @@
 						<i class="fa fa-shopping-cart text-xl text-gray-700"></i>
 						<span class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{{cart_count}}</span>
 					</a>
+					
 					
 					<!-- Mobile Menu Toggle -->
 					<button id="mobileMenuBtn" class="md:hidden p-2 hover:bg-gray-100 rounded-lg" type="button">
@@ -152,8 +176,28 @@
 			<a href="#" class="block py-2 text-gray-700 font-medium hover:text-blue-600 transition">About</a>
 			<a href="#" class="block py-2 text-gray-700 font-medium hover:text-blue-600 transition">Contact</a>
 			<hr class="border-gray-200">
-			<a href="./signin.html" class="block py-2 text-blue-600 font-semibold hover:text-blue-700 transition">Sign In</a>
-			<a href="./register.html" class="block py-2 text-blue-600 font-semibold hover:text-blue-700 transition">Register</a>
+			
+			{% if user.id is None %}
+				<a href="{% url 'login' %}" class="block py-2 text-blue-600 font-semibold hover:text-blue-700 transition">
+					<i class="fa fa-sign-in-alt mr-2"></i>Sign In
+				</a>
+				<a href="{% url 'register' %}" class="block py-2 text-blue-600 font-semibold hover:text-blue-700 transition">
+					<i class="fa fa-user-plus mr-2"></i>Register
+				</a>
+			{% else %}
+				<div class="flex items-center gap-2 py-2">
+					<div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold">
+						{{ user.first_name|first|upper }}
+					</div>
+					<span class="font-semibold text-gray-800">{{ user.first_name }}</span>
+				</div>
+				<a href="#" class="block py-2 text-gray-700 font-medium hover:text-blue-600 transition">
+					<i class="fa fa-user-circle mr-2"></i>Dashboard
+				</a>
+				<a href="{% url 'logout' %}" class="block py-2 text-red-600 font-semibold hover:text-red-700 transition">
+					<i class="fa fa-sign-out-alt mr-2"></i>Logout
+				</a>
+			{% endif %}
 		</div>
 	</div>
 </header>
