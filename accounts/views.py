@@ -32,7 +32,7 @@ def register(request):
 
                 # User Activation
                 current_site = get_current_site(request)
-                main_subject = "Please activate your account"
+                mail_subject = "Please activate your account"
                 message = render_to_string('accounts/emails/account_verification_email.html', {
                     'user': user,
                     'domain': current_site,
@@ -43,8 +43,8 @@ def register(request):
                 send_email = EmailMessage(mail_subject, message, to=[to_email])
                 send_email.send()
 
-                messages.success(request, 'Registration successful! Check your email for verification link.')
-                form = RegisterForm()
+                # messages.success(request, 'Registration successful! Check your email for verification link.')
+                return redirect('/auth/login/?command=verification&email='+email)
             except Exception as e:
                 messages.error(request, 'Registration failed. Please try again.')
         else:
@@ -84,3 +84,22 @@ def logout(request):
     auth.logout(request)
     messages.success(request, "You're logged out!")
     return redirect('login')
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Account._default_manager.get(pk=uid)
+
+    except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, "Congrats, your account is successfully verified. You can login to your acount and start shopping!")
+        return redirect('login')
+    
+    else:
+        messages.error(request, 'Invalid activation link')
+        return redirect('register')
