@@ -12,6 +12,10 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 
+from carts.models import Cart, CartItem
+from carts.views import _cart_id
+import requests
+
 
 
 def register(request):
@@ -69,14 +73,79 @@ def login(request):
         user = auth.authenticate(email=email, password=password)
 
         if user is not None:
+            _merge_session_cart_with_user_cart(request, user)
             auth.login(request, user)
             messages.success(request, 'Logged in successfully')
-            return redirect('dashboard')
-        
+            
+            # Check session for next URL (saved from GET request)
+            next_url = request.session.get('next_url') or 'dashboard'
+            
+            # Clear it from session after use
+            if 'next_url' in request.session:
+                del request.session['next_url']
+            
+            return redirect(next_url)
         else:
             messages.error(request, 'Username or password not correct!')
             return redirect('login')
+    else:
+        # GET request - save 'next' to session for POST
+        next_url = request.GET.get('next')
+        if next_url:
+            request.session['next_url'] = next_url
+    
     return render(request, 'accounts/login.html')
+
+
+def _merge_session_cart_with_user_cart(request, user):
+    """
+    Merges anonymous session cart items with authenticated user's cart.
+    If same product+variations exist, increases quantity. Otherwise, transfers item.
+    """
+    try:
+        # Get anonymous session cart
+        cart = Cart.objects.get(cart_id=_cart_id(request))
+        cart_item = CartItem.objects.filter(cart=cart)
+        
+        if not cart_item.exists():
+            return
+        
+        # Get user's existing cart items
+        user_cart_items = CartItem.objects.filter(user=user)
+        
+        # Build lookup dict: variation_ids (sorted tuple) -> user cart item
+        user_variation_map = {}
+        for item in user_cart_items:
+            variation_ids = tuple(sorted(item.variations.values_list('id', flat=True)))
+            user_variation_map[variation_ids] = item
+        
+        # Process each session cart item
+        for item in cart_item:
+            # Get variation IDs for current item
+            variation_ids = tuple(sorted(item.variations.values_list('id', flat=True)))
+            
+            # Check if user already has this product+variation combo
+            if variation_ids in user_variation_map:
+                # Increase quantity of existing user cart item
+                existing_item = user_variation_map[variation_ids]
+                existing_item.quantity += item.quantity
+                existing_item.save()
+                
+                # Delete session cart item (merged)
+                item.delete()
+            else:
+                # Transfer session cart item to user
+                item.user = user
+                item.cart = None  # Disconnect from session cart
+                item.save()
+        
+        # Optional: Delete empty session cart
+        if not CartItem.objects.filter(cart=cart).exists():
+            cart.delete()
+            
+    except Cart.DoesNotExist:
+        # No session cart exists, nothing to merge
+        pass
 
 
 @login_required(login_url = 'login')
