@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="py-8 bg-gray-50">
+<div class="max-w-7xl mx-auto px-4">
+
+    <nav class="flex mb-4 text-sm" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="{% url 'store' %}" class="text-gray-700 hover:text-blue-600 inline-flex items-center">
+                    Shop
+                </a>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <i class="fa fa-chevron-right text-gray-400 mx-2"></i>
+                    <span class="text-gray-500">Shopping Cart</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+        <p class="text-gray-600 mt-1">Review your items before checkout</p>
+    </div>
+
+    <!-- Cart Items -->
+    <div class="flex flex-wrap lg:flex-nowrap gap-6">
+        <!-- Cart Table -->
+        <div class="w-full lg:flex-1">
+            <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+                
+                <!-- Billing Details Section -->
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-gray-900">
+                            <i class="fa fa-user-circle text-blue-600 mr-2"></i>
+                            Billing Details
+                        </h2>
+                        <a href="#" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Edit</a>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">Full Name</p>
+                            <p class="text-gray-900 font-medium">{{ order.full_name }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">Email</p>
+                            <p class="text-gray-900 font-medium">{{ order.email }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">Phone</p>
+                            <p class="text-gray-900 font-medium">{{ order.phone_number }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">Address</p>
+                            <p class="text-gray-900 font-medium">{{ order.address_line_1 }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">City</p>
+                            <p class="text-gray-900 font-medium">{{ order.city }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">State</p>
+                            <p class="text-gray-900 font-medium">{{ order.state }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-1">Country</p>
+                            <p class="text-gray-900 font-medium">{{ order.country }}</p>
+                        </div>
+                        {% if order.order_note %}
+                        <div class="md:col-span-2">
+                            <p class="text-xs text-gray-500 mb-1">Order Note</p>
+                            <p class="text-gray-700 italic bg-gray-50 p-3 rounded-lg">{{ order.order_note }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Payment Method Section -->
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-gray-900">
+                            <i class="fa fa-credit-card text-blue-600 mr-2"></i>
+                            Payment Method
+                        </h2>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border-2 border-blue-600 rounded-lg cursor-pointer bg-blue-50">
+                            <input type="radio" name="payment" value="card" checked class="w-4 h-4 text-blue-600">
+                            <div class="ml-3 flex-1">
+                                <span class="font-medium text-gray-900">Credit/Debit Card</span>
+                                <div class="flex gap-2 mt-1">
+                                    <i class="fab fa-cc-visa text-xl text-blue-600"></i>
+                                    <i class="fab fa-cc-mastercard text-xl text-red-600"></i>
+                                    <i class="fab fa-cc-amex text-xl text-blue-400"></i>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-gray-300">
+                            <input type="radio" name="payment" value="paypal" class="w-4 h-4 text-blue-600">
+                            <div class="ml-3 flex-1">
+                                <span class="font-medium text-gray-900">PayPal</span>
+                                <i class="fab fa-paypal text-xl text-blue-500 ml-2"></i>
+                            </div>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-gray-300">
+                            <input type="radio" name="payment" value="cod" class="w-4 h-4 text-blue-600">
+                            <span class="ml-3 font-medium text-gray-900">Cash on Delivery</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Review Products Section -->
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-gray-900">
+                            <i class="fa fa-shopping-bag text-blue-600 mr-2"></i>
+                            Review Products
+                        </h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50 border-b border-gray-200">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Product</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Price</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Quantity</th>
+                                    <th class="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                {% for item in cart_items %}
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <img src="{{ item.product.product_image.url }}" alt="{{ item.product.name }}" class="w-16 h-16 object-cover rounded-lg">
+                                            <div>
+                                                <p class="font-medium text-gray-900">{{ item.product.product_name }}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-center text-gray-900 font-medium">${{ item.product.price }}</td>
+                                    <td class="px-4 py-4 text-center">
+                                        <span class="inline-block px-3 py-1 bg-gray-100 rounded-lg font-medium text-gray-900">{{ item.quantity }}</span>
+                                    </td>
+                                    <td class="px-4 py-4 text-right text-gray-900 font-bold">${{ item.sub_total }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="px-4 py-8 text-center text-gray-500">
+                                        <i class="fa fa-shopping-cart text-4xl text-gray-300 mb-2"></i>
+                                        <p>Your cart is empty</p>
+                                        <a href="{% url 'store' %}" class="text-blue-600 hover:text-blue-700 font-medium mt-2 inline-block">Continue Shopping</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <aside class="w-full lg:w-96">
+            <div class="bg-white shadow-sm rounded-lg sticky top-24">
+                <div class="p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Order Summary</h3>
+                    
+                    <div class="space-y-3 mb-4">
+                        <div class="flex justify-between items-center text-gray-700">
+                            <span>Subtotal ({{ cart_items|length }} item{{ cart_items|length|pluralize }})</span>
+                            <span class="font-semibold">${{ total }}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-gray-700">
+                            <span>Tax</span>
+                            <span class="font-semibold">${{ tax }}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-gray-700">
+                            <span>Shipping</span>
+                            <span class="text-green-600 font-semibold">FREE</span>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4 border-gray-200">
+                    
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-lg font-bold text-gray-900">Grand Total</span>
+                        <span class="text-2xl font-bold text-blue-600">${{ grand_total }}</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-center gap-2 mb-6 text-gray-500 text-sm">
+                        <i class="fab fa-cc-visa text-2xl text-blue-600"></i>
+                        <i class="fab fa-cc-mastercard text-2xl text-red-600"></i>
+                        <i class="fab fa-cc-paypal text-2xl text-blue-500"></i>
+                        <i class="fab fa-cc-amex text-2xl text-blue-400"></i>
+                    </div>
+                    
+                    <a href="{% url 'checkout' %}" class="block w-full text-center bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition shadow-sm hover:shadow-md mb-3">
+                        <i class="fa fa-lock mr-2"></i> Make Payments
+                    </a>
+                    
+                    <div class="mt-4 p-3 bg-green-50 rounded-lg">
+                        <p class="text-xs text-green-800 text-center">
+                            <i class="fa fa-shipping-fast mr-1"></i> Free shipping on orders over $50
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+    
+</div>
+</section>
+{% endblock %}
