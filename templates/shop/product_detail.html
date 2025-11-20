@@ -64,7 +64,8 @@
 
 					<hr class="border-gray-200 my-4">
 
-					<!-- Color Selection -->
+					<!-- Color Selection - Only show if colors exist -->
+					{% if product.variation_set.colors %}
 					<div class="mb-6">
 						<label class="block text-sm font-semibold text-gray-700 mb-3">Color</label>
 						<select name="color" class="w-auto px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white text-gray-700 font-medium cursor-pointer hover:border-gray-400 transition" required>
@@ -72,11 +73,12 @@
 							{% for color in product.variation_set.colors %}
 							<option value="{{ color.variation_value | lower }}">{{color.variation_value | capfirst }}</option>
 							{% endfor %}
-							
 						</select>
 					</div>
+					{% endif %}
 
-					<!-- Size Selection -->
+					<!-- Size Selection - Only show if sizes exist -->
+					{% if product.variation_set.sizes %}
 					<div class="mb-6">
 						<label class="block text-sm font-semibold text-gray-700 mb-3">Size</label>
 						<select name="size" class="w-auto px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white text-gray-700 font-medium cursor-pointer hover:border-gray-400 transition" required>
@@ -86,6 +88,7 @@
 							{% endfor %}
 						</select>
 					</div>
+					{% endif %}
 
 					<!-- Action Buttons -->
 					<div class="flex gap-3 mb-6">

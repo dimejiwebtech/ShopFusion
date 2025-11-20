@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto px-4 mt-12 flex flex-col items-center">
+    
+    <i class="fas fa-check-circle text-7xl mb-5 text-blue-600"></i>
+    
+    <h2 class="text-3xl font-bold text-gray-800 text-center mb-6">
+        Payment Successful
+    </h2>
+    
+    <div class="text-center">
+        <a href="{% url 'store' %}" class="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+            Shop more
+        </a>
+    </div>
+
+</div>
+
+<div class="container mx-auto px-4 my-12">
+    <div class="w-full md:w-3/4 lg:w-3/4 mx-auto bg-white p-8 md:p-12 rounded-lg shadow-lg">
+        
+        <div class="flex flex-wrap -mx-4">
+            <div class="w-full lg:w-1/2 px-4 mb-6 lg:mb-0">
+                <span class="text-2xl font-bold">
+                    <span class="text-blue-600">Store</span><span class="text-gray-800">Frenzy</span>
+                </span>
+            </div>
+            
+            <div class="w-full lg:w-1/2 px-4 text-left lg:text-right">
+                <ul class="list-none text-gray-700">
+                    <li class="font-semibold text-gray-900 text-lg">Invoiced To</li>
+                    <li>{{ order.full_name }}</li>
+                    <li>{{ order.address_line_1 }}</li>
+                    {% if order.address_line_2 %}
+                    <li>{{ order.address_line_2 }}</li>
+                    {% endif %}
+                    <li>{{ order.city }}, {{ order.state }}</li>
+                    <li>{{ order.country }}</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <div class="bg-gray-100 p-4 rounded-lg">
+                <ul class="list-none m-0 space-y-1 text-gray-800">
+                    <li><strong>Order:</strong> #{{ order.order_number }}</li>
+                    <li><strong>Transaction:</strong> #{{ payment_id }}</li>
+                    <li><strong>Order Date:</strong> {{ order.created_at|date:"l, F d, Y" }}</li>
+                    <li><strong>Status:</strong> <span class="font-semibold text-green-600">PAID</span></li>
+                </ul>
+            </div>
+            
+            <div class="w-full overflow-x-auto mt-8">
+                <table class="min-w-full border-collapse border border-gray-300">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="w-[70%] border border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">Product(s) Ordered</th>
+                            <th class="w-[5%] border border-gray-300 px-4 py-2 text-center font-semibold text-gray-700">Qty</th>
+                            <th class="w-[25%] border border-gray-300 px-4 py-2 text-center font-semibold text-gray-700">Total</th>
+                        </tr>
+                    </thead>
+                <tbody class="text-gray-700">
+                    {% for item in ordered_products %}
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <div class="flex items-start gap-3">
+                                <img src="{{ item.product.product_image.url }}" alt="{{ item.product.product_name }}" class="w-16 h-16 object-cover rounded">
+                                <div>
+                                    <div class="font-semibold">{{ item.product.product_name }}</div>
+                                    {% if item.color or item.size %}
+                                    <div class="text-sm text-gray-600 mt-1">
+                                        {% if item.color %}<span>Color: {{ item.color }}</span>{% endif %}
+                                        {% if item.color and item.size %} | {% endif %}
+                                        {% if item.size %}<span>Size: {{ item.size }}</span>{% endif %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2 text-center">{{ item.quantity }}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center">${{ item.product_price|floatformat:2 }} USD</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                    <tfoot class="font-semibold text-gray-800">
+                        <tr>
+                            <th colspan="2" class="border border-gray-300 px-4 py-2 text-right">Sub Total:</th>
+                            <th class="border border-gray-300 px-4 py-2 text-center">${{ subtotal|floatformat:2 }} USD</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="border border-gray-300 px-4 py-2 text-right">Tax:</th>
+                            <th class="border border-gray-300 px-4 py-2 text-center">${{ order.tax|floatformat:2 }} USD</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="border border-gray-300 px-4 py-2 text-right text-lg">Grand Total:</th>
+                            <th class="border border-gray-300 px-4 py-2 text-center text-lg">${{ order.order_total|floatformat:2 }} USD</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="mt-8 text-center text-gray-500">
+                <p>Thank you for shopping with us!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

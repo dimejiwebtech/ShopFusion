@@ -10,11 +10,11 @@ def _cart_id(request):
         cart = request.session.create()
     return cart
 
+
 def add_cart(request, product_id):
     """
     Adds product with variations to cart.
-    Handles both authenticated and anonymous users.
-    Increases quantity if same product+variation exists.
+    Stores all variations in single CartItem per product.
     """
     current_user = request.user
     product = Product.objects.get(id=product_id)
@@ -22,7 +22,7 @@ def add_cart(request, product_id):
     # Extract variations from POST data
     product_variation = _extract_product_variations(request, product)
     
-    # Route to appropriate handler based on authentication
+    # Route based on authentication
     if current_user.is_authenticated:
         _add_to_user_cart(product, product_variation, current_user)
     else:
@@ -33,7 +33,7 @@ def add_cart(request, product_id):
 
 def _extract_product_variations(request, product):
     """
-    Extracts product variations (size, color, etc.) from POST request.
+    Extracts variations (size, color) from POST request.
     Returns list of Variation objects.
     """
     product_variation = []
@@ -58,109 +58,90 @@ def _extract_product_variations(request, product):
 
 def _add_to_user_cart(product, product_variation, current_user):
     """
-    Adds product to authenticated user's cart.
-    If same product+variation exists, increases quantity.
-    Otherwise creates new cart item.
+    Creates separate CartItem for each unique variation combination.
+    Increases quantity if same combo already exists.
     """
     # Get variation IDs for comparison
     product_variation_ids = sorted([v.id for v in product_variation])
     
-    # Check if product already in user's cart
+    # Check existing cart items for this product
     cart_items = CartItem.objects.filter(product=product, user=current_user)
     
     if cart_items.exists():
-        # Build lookup map of existing variations
-        existing_variation_list = []
-        id_list = []
+        # Find if exact variation combo exists
+        for cart_item in cart_items:
+            existing_variation_ids = sorted(list(cart_item.variations.values_list('id', flat=True)))
+            
+            if product_variation_ids == existing_variation_ids:
+                # Same combo found - increase quantity
+                cart_item.quantity += 1
+                cart_item.save()
+                return
         
-        for item in cart_items:
-            existing_variation = item.variations.all()
-            existing_variation_list.append(sorted(list(existing_variation.values_list('id', flat=True))))
-            id_list.append(item.id)
-        
-        # Check if exact variation combo exists
-        if product_variation_ids in existing_variation_list:
-            # Increase quantity of existing item
-            index = existing_variation_list.index(product_variation_ids)
-            item_id = id_list[index]
-            item = CartItem.objects.get(product=product, id=item_id)
-            item.quantity += 1
-            item.save()
-        else:
-            # Create new cart item for different variation
-            cart_item = CartItem.objects.create(
-                product=product,
-                quantity=1,
-                user=current_user
-            )
-            if len(product_variation) > 0:
-                cart_item.variations.add(*product_variation)
-    else:
-        # Create first cart item for this product
+        # Different combo - create new cart item
         cart_item = CartItem.objects.create(
             product=product,
             quantity=1,
             user=current_user
         )
-        if len(product_variation) > 0:
-            cart_item.variations.add(*product_variation)
+        if product_variation:
+            cart_item.variations.set(product_variation)
+    else:
+        # First cart item for this product
+        cart_item = CartItem.objects.create(
+            product=product,
+            quantity=1,
+            user=current_user
+        )
+        if product_variation:
+            cart_item.variations.set(product_variation)
 
 
 def _add_to_session_cart(request, product, product_variation):
     """
-    Adds product to anonymous user's session cart.
-    If same product+variation exists, increases quantity.
-    Otherwise creates new cart item.
+    Creates separate CartItem for each unique variation combination.
+    Increases quantity if same combo already exists.
     """
-    # Get variation IDs for comparison
-    product_variation_ids = sorted([v.id for v in product_variation])
-    
     # Get or create session cart
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))
     except Cart.DoesNotExist:
         cart = Cart.objects.create(cart_id=_cart_id(request))
-        cart.save()
     
-    # Check if product already in session cart
+    # Get variation IDs for comparison
+    product_variation_ids = sorted([v.id for v in product_variation])
+    
+    # Check existing cart items for this product
     cart_items = CartItem.objects.filter(product=product, cart=cart)
     
     if cart_items.exists():
-        # Build lookup map of existing variations
-        existing_variation_list = []
-        id_list = []
+        # Find if exact variation combo exists
+        for cart_item in cart_items:
+            existing_variation_ids = sorted(list(cart_item.variations.values_list('id', flat=True)))
+            
+            if product_variation_ids == existing_variation_ids:
+                # Same combo found - increase quantity
+                cart_item.quantity += 1
+                cart_item.save()
+                return
         
-        for item in cart_items:
-            existing_variation = item.variations.all()
-            existing_variation_list.append(sorted(list(existing_variation.values_list('id', flat=True))))
-            id_list.append(item.id)
-        
-        # Check if exact variation combo exists
-        if product_variation_ids in existing_variation_list:
-            # Increase quantity of existing item
-            index = existing_variation_list.index(product_variation_ids)
-            item_id = id_list[index]
-            item = CartItem.objects.get(product=product, id=item_id)
-            item.quantity += 1
-            item.save()
-        else:
-            # Create new cart item for different variation
-            cart_item = CartItem.objects.create(
-                product=product,
-                quantity=1,
-                cart=cart
-            )
-            if len(product_variation) > 0:
-                cart_item.variations.add(*product_variation)
-    else:
-        # Create first cart item for this product
+        # Different combo - create new cart item
         cart_item = CartItem.objects.create(
             product=product,
             quantity=1,
             cart=cart
         )
-        if len(product_variation) > 0:
-            cart_item.variations.add(*product_variation)
+        if product_variation:
+            cart_item.variations.set(product_variation)
+    else:
+        # First cart item for this product
+        cart_item = CartItem.objects.create(
+            product=product,
+            quantity=1,
+            cart=cart
+        )
+        if product_variation:
+            cart_item.variations.set(product_variation)
 
 def remove_cart(request, product_id, cart_item_id):
     product = get_object_or_404(Product, id=product_id)
