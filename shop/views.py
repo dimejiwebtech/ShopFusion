@@ -1,9 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from carts.models import CartItem
 from carts.views import _cart_id
-from shop.models import Category, Product
+from shop.forms import ReviewForm
+from shop.models import Category, Product, ReviewRating
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
+from django.db.models import Avg, Count
+from django.contrib import messages
 
 def home(request):
     products = Product.objects.all().filter(is_available=True)
@@ -42,15 +45,84 @@ def products_by_category(request, category_slug):
     return render(request, 'shop/store.html', context)
 
 def product_detail(request, category_slug, product_slug):
-    category = get_object_or_404(Category, slug=category_slug)
-    product = get_object_or_404(Product, slug=product_slug, category=category, is_available=True)
-    in_cart = CartItem.objects.filter(cart__cart_id=_cart_id(request), product=product).exists()
+    """
+    Display product details with ratings and reviews.
+    Handles review submission for authenticated users.
+    """
+    product = get_object_or_404(Product, slug=product_slug, category__slug=category_slug)
+    
+    # Handle review submission
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            # Check if user already reviewed this product
+            existing_review = ReviewRating.objects.filter(
+                product=product,
+                user=request.user
+            ).first()
+            
+            if existing_review:
+                # Update existing review
+                existing_review.subject = form.cleaned_data['subject']
+                existing_review.review = form.cleaned_data['review']
+                existing_review.rating = form.cleaned_data['rating']
+                existing_review.ip = request.META.get('REMOTE_ADDR')
+                existing_review.save()
+                messages.success(request, 'Your review has been updated successfully!')
+            else:
+                # Create new review
+                review = form.save(commit=False)
+                review.product = product
+                review.user = request.user
+                review.ip = request.META.get('REMOTE_ADDR')
+                review.save()
+                messages.success(request, 'Thank you! Your review has been submitted.')
+            
+            return redirect('product_detail', category_slug=category_slug, product_slug=product_slug)
+    else:
+        form = ReviewForm()
+    
+    # Get reviews and calculate statistics
+    reviews = ReviewRating.objects.filter(product=product, status=True).order_by('-created_at')
+    review_count = reviews.count()
+    
+    # Calculate average rating and rating distribution
+    if review_count > 0:
+        avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+        rating_distribution = {
+            5: reviews.filter(rating=5).count(),
+            4: reviews.filter(rating=4).count(),
+            3: reviews.filter(rating=3).count(),
+            2: reviews.filter(rating=2).count(),
+            1: reviews.filter(rating=1).count(),
+        }
+    else:
+        avg_rating = 0
+        rating_distribution = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}
+    
+    # Check if user has purchased this product
+    user_has_purchased = False
+    user_review = None
+    if request.user.is_authenticated:
+        from orders.models import OrderedProduct
+        user_has_purchased = OrderedProduct.objects.filter(
+            user=request.user,
+            product=product,
+            ordered=True
+        ).exists()
+        user_review = ReviewRating.objects.filter(product=product, user=request.user).first()
     
     context = {
         'product': product,
-        'category': category,
-        'in_cart': in_cart,
+        'form': form,
+        'reviews': reviews,
+        'review_count': review_count,
+        'avg_rating': round(avg_rating, 1) if avg_rating else 0,
+        'rating_distribution': rating_distribution,
+        'user_has_purchased': user_has_purchased,
+        'user_review': user_review,
     }
+    
     return render(request, 'shop/product_detail.html', context)
 
 def product_search(request):

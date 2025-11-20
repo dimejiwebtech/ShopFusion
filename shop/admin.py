@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Variation
+from .models import Category, Product, Variation, ReviewRating
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -36,3 +36,7 @@ class VariationAdmin(admin.ModelAdmin):
     list_display = ('product', 'variation_category', 'variation_value', 'is_active')
     list_editable = ('is_active',)
     list_filter = ('product', 'variation_category', 'variation_value',)
+
+@admin.register(ReviewRating)
+class ReviewRatingAdmin(admin.ModelAdmin):
+    list_display = ('product', 'review')

@@ -26,15 +26,26 @@
 						<!-- Rating & Reviews -->
 						<div class="flex items-center gap-2 mb-3">
 							<div class="flex text-yellow-400">
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star"></i>
-								<i class="fas fa-star-half-alt"></i>
+								<!-- Loop 1-5 to display stars based on avg_rating -->
+								{% for i in "12345" %}
+									{% if avg_rating >= forloop.counter %}
+										<i class="fas fa-star"></i>
+									{% elif avg_rating >= forloop.counter|add:"-0.5" %}
+										<i class="fas fa-star-half-alt"></i>
+									{% else %}
+										<i class="far fa-star"></i>
+									{% endif %}
+								{% endfor %}
 							</div>
-							<span class="text-gray-600 text-sm">(4.5)</span>
+							<!-- Numeric Rating -->
+							<span class="text-gray-600 text-sm">({{ avg_rating }})</span>
+							
 							<span class="text-gray-400 text-sm">|</span>
-							<a href="#reviews" class="text-blue-600 text-sm hover:underline">128 Reviews</a>
+							
+							
+							<a href="#reviews" class="text-blue-600 text-sm hover:underline">
+								{{ review_count }} Review{{ review_count|pluralize }}
+							</a>
 						</div>
 
 						<!-- Price -->
@@ -152,145 +163,214 @@
 		</div>
 	</div>
 	{% endif %}
+	
+<!-- Customer Reviews Section -->
+<div class="bg-white rounded-lg shadow-sm p-6" id="reviews">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Customer Reviews</h2>
+        {% if user.is_authenticated and user_has_purchased %}
+        <button onclick="document.getElementById('review-form').scrollIntoView({behavior: 'smooth'})" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
+            {% if user_review %}Update Review{% else %}Write a Review{% endif %}
+        </button>
+        {% endif %}
+    </div>
 
-	<!-- Customer Reviews Section -->
-	<div class="bg-white rounded-lg shadow-sm p-6" id="reviews">
-		<div class="flex items-center justify-between mb-6">
-			<h2 class="text-2xl font-bold text-gray-900">Customer Reviews</h2>
-			<button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
-				Write a Review
-			</button>
-		</div>
+    <!-- Review Summary -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 pb-6 border-b border-gray-200">
+        <div class="text-center">
+            <div class="text-5xl font-bold text-gray-900 mb-2">{{ avg_rating }}</div>
+            <!-- Read-only Average Display -->
+            <div class="flex justify-center text-yellow-400 text-xl mb-2">
+                {% for i in "12345" %}
+                    {% if avg_rating >= forloop.counter %}
+                        <i class="fas fa-star"></i>
+                    {% elif avg_rating >= forloop.counter|add:"-0.5" %}
+                        <i class="fas fa-star-half-alt"></i>
+                    {% else %}
+                        <i class="far fa-star"></i>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="text-gray-600 text-sm">Based on {{ review_count }} review{{ review_count|pluralize }}</div>
+        </div>
+        
+        <!-- (Optional: You can add the Progress bars for distribution here if needed) -->
+    </div>
 
-		<!-- Review Summary -->
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 pb-6 border-b border-gray-200">
-			<div class="text-center">
-				<div class="text-5xl font-bold text-gray-900 mb-2">4.5</div>
-				<div class="flex justify-center text-yellow-400 text-xl mb-2">
-					<i class="fas fa-star"></i>
-					<i class="fas fa-star"></i>
-					<i class="fas fa-star"></i>
-					<i class="fas fa-star"></i>
-					<i class="fas fa-star-half-alt"></i>
-				</div>
-				<div class="text-gray-600 text-sm">Based on 128 reviews</div>
-			</div>
-			
-			<div class="md:col-span-2 space-y-2">
-				<div class="flex items-center gap-2">
-					<span class="text-sm text-gray-600 w-8">5★</span>
-					<div class="flex-1 bg-gray-200 rounded-full h-2">
-						<div class="bg-yellow-400 h-2 rounded-full" style="width: 70%"></div>
-					</div>
-					<span class="text-sm text-gray-600 w-8">90</span>
-				</div>
-				<div class="flex items-center gap-2">
-					<span class="text-sm text-gray-600 w-8">4★</span>
-					<div class="flex-1 bg-gray-200 rounded-full h-2">
-						<div class="bg-yellow-400 h-2 rounded-full" style="width: 20%"></div>
-					</div>
-					<span class="text-sm text-gray-600 w-8">26</span>
-				</div>
-				<div class="flex items-center gap-2">
-					<span class="text-sm text-gray-600 w-8">3★</span>
-					<div class="flex-1 bg-gray-200 rounded-full h-2">
-						<div class="bg-yellow-400 h-2 rounded-full" style="width: 7%"></div>
-					</div>
-					<span class="text-sm text-gray-600 w-8">9</span>
-				</div>
-				<div class="flex items-center gap-2">
-					<span class="text-sm text-gray-600 w-8">2★</span>
-					<div class="flex-1 bg-gray-200 rounded-full h-2">
-						<div class="bg-yellow-400 h-2 rounded-full" style="width: 2%"></div>
-					</div>
-					<span class="text-sm text-gray-600 w-8">2</span>
-				</div>
-				<div class="flex items-center gap-2">
-					<span class="text-sm text-gray-600 w-8">1★</span>
-					<div class="flex-1 bg-gray-200 rounded-full h-2">
-						<div class="bg-yellow-400 h-2 rounded-full" style="width: 1%"></div>
-					</div>
-					<span class="text-sm text-gray-600 w-8">1</span>
-				</div>
-			</div>
-		</div>
+    <!-- Review Form (Interactive Star Rating) -->
+    {% if user.is_authenticated and user_has_purchased %}
+    <div id="review-form" class="bg-gray-50 rounded-lg p-6 mb-8">
+		{% include 'includes/messages.html' %}
+		
+        <h3 class="text-lg font-bold text-gray-900 mb-4">{% if user_review %}Update Your Review{% else %}Write a Review{% endif %}</h3>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="space-y-4">
+                
+                <!-- Interactive Rating Logic -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Your Rating</label>
+                    <!-- Visual Stars Container -->
+                    <div class="flex items-center space-x-1 cursor-pointer w-max" id="star-container">
+                        <i class="far fa-star text-2xl text-yellow-400 hover:scale-110 transition-transform" data-value="1"></i>
+                        <i class="far fa-star text-2xl text-yellow-400 hover:scale-110 transition-transform" data-value="2"></i>
+                        <i class="far fa-star text-2xl text-yellow-400 hover:scale-110 transition-transform" data-value="3"></i>
+                        <i class="far fa-star text-2xl text-yellow-400 hover:scale-110 transition-transform" data-value="4"></i>
+                        <i class="far fa-star text-2xl text-yellow-400 hover:scale-110 transition-transform" data-value="5"></i>
+                    </div>
+                    <!-- Helper text to show current selection -->
+                    <div class="text-sm text-gray-500 mt-1" id="rating-text">Select a Rating</div>
+                    
+                    <!-- The Actual Form Field (Hidden) -->
+                    {{ form.rating }}
+                </div>
 
-		<!-- Individual Reviews -->
-		<div class="space-y-6">
-			<!-- Review 1 -->
-			<article class="border-b border-gray-200 pb-6">
-				<div class="flex gap-4">
-					<img src="{% static 'images/avatars/avatar1.jpg' %}" class="w-12 h-12 rounded-full flex-shrink-0" alt="User">
-					<div class="flex-1">
-						<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-							<div>
-								<h6 class="font-semibold text-gray-900">Mike Johnson</h6>
-								<div class="flex text-yellow-400 text-sm mt-1">
-									<i class="fas fa-star"></i>
-									<i class="fas fa-star"></i>
-									<i class="fas fa-star"></i>
-									<i class="fas fa-star"></i>
-									<i class="fas fa-star"></i>
-								</div>
-							</div>
-							<span class="text-sm text-gray-500 mt-2 md:mt-0">April 24, 2024</span>
-						</div>
-						<p class="text-gray-700 leading-relaxed mt-2">
-							Excellent product! The quality exceeded my expectations. Shipping was fast and the packaging was secure. Highly recommend this to anyone looking for a reliable product.
-						</p>
-						<div class="flex items-center gap-4 mt-3 text-sm">
-							<button class="text-gray-600 hover:text-blue-600 transition">
-								<i class="far fa-thumbs-up"></i> Helpful (12)
-							</button>
-							<button class="text-gray-600 hover:text-blue-600 transition">
-								<i class="far fa-comment"></i> Reply
-							</button>
-						</div>
-					</div>
-				</div>
-			</article>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Subject</label>
+                    {{ form.subject }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Your Review</label>
+                    {{ form.review }}
+                </div>
+                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Submit Review
+                </button>
+            </div>
+        </form>
+    </div>
 
-			<!-- Review 2 -->
-			<article class="border-b border-gray-200 pb-6">
-				<div class="flex gap-4">
-					<img src="{% static 'images/avatars/avatar2.jpg' %}" class="w-12 h-12 rounded-full flex-shrink-0" alt="User">
-					<div class="flex-1">
-						<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-							<div>
-								<h6 class="font-semibold text-gray-900">Sarah Williams</h6>
-								<div class="flex text-yellow-400 text-sm mt-1">
-									<i class="fas fa-star"></i>
-									<i class="fas fa-star"></i>
-									<i class="fas fa-star"></i>
-									<i class="fas fa-star"></i>
-									<i class="far fa-star"></i>
-								</div>
-							</div>
-							<span class="text-sm text-gray-500 mt-2 md:mt-0">April 20, 2024</span>
-						</div>
-						<p class="text-gray-700 leading-relaxed mt-2">
-							Good product overall. Meets my needs perfectly. The only minor issue was the delivery took a bit longer than expected, but the product itself is great.
-						</p>
-						<div class="flex items-center gap-4 mt-3 text-sm">
-							<button class="text-gray-600 hover:text-blue-600 transition">
-								<i class="far fa-thumbs-up"></i> Helpful (8)
-							</button>
-							<button class="text-gray-600 hover:text-blue-600 transition">
-								<i class="far fa-comment"></i> Reply
-							</button>
-						</div>
-					</div>
-				</div>
-			</article>
-		</div>
+    <!-- JavaScript for Half-Star Interaction -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('star-container');
+            const stars = container.querySelectorAll('i');
+            const input = document.getElementById('rating_input');
+            const ratingText = document.getElementById('rating-text');
 
-		<!-- Load More -->
-		<div class="text-center mt-6">
-			<button class="border-2 border-gray-300 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:border-blue-600 hover:text-blue-600 transition">
-				Load More Reviews
-			</button>
-		</div>
-	</div>
+            // Handle Float Initial Value (if updating a review)
+            let currentRating = parseFloat(input.value) || 0;
+            if (currentRating > 0) updateStars(currentRating);
+
+            // Helper to update star visuals
+            function updateStars(value) {
+                stars.forEach((star, index) => {
+                    const starValue = index + 1;
+                    star.className = 'text-2xl text-yellow-400 hover:scale-110 transition-transform '; // Reset base classes
+                    
+                    if (value >= starValue) {
+                        star.classList.add('fas', 'fa-star'); // Full
+                    } else if (value >= starValue - 0.5) {
+                        star.classList.add('fas', 'fa-star-half-alt'); // Half
+                    } else {
+                        star.classList.add('far', 'fa-star'); // Empty
+                    }
+                });
+                if(value > 0) ratingText.textContent = value + ' Stars';
+            }
+
+            // Hover Effect Logic
+            container.addEventListener('mousemove', function(e) {
+                const rect = container.getBoundingClientRect();
+                // Calculate mouse position relative to container width
+                const x = e.clientX - rect.left;
+                const widthPerStar = rect.width / 5;
+                
+                // Calculate raw rating (0-5)
+                let hoverValue = Math.ceil((x / widthPerStar) * 2) / 2;
+                
+                // Clamp between 0.5 and 5
+                hoverValue = Math.min(Math.max(hoverValue, 0.5), 5);
+                
+                updateStars(hoverValue);
+            });
+
+            // Reset on mouse leave (unless clicked)
+            container.addEventListener('mouseleave', function() {
+                updateStars(currentRating);
+            });
+
+            // Click to Set
+            container.addEventListener('click', function(e) {
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const widthPerStar = rect.width / 5;
+                let clickValue = Math.ceil((x / widthPerStar) * 2) / 2;
+                clickValue = Math.min(Math.max(clickValue, 0.5), 5);
+
+                currentRating = clickValue;
+                input.value = currentRating; // Update Hidden Form Input
+                updateStars(currentRating);
+                
+                // Optional visual feedback
+                ratingText.textContent = "Rated " + currentRating + " Stars";
+                ratingText.classList.add('text-blue-600', 'font-bold');
+            });
+        });
+    </script>
+
+    {% elif not user.is_authenticated %}
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8 text-center">
+        <p class="text-blue-800"><a href="{% url 'login' %}" class="font-semibold hover:underline">Login</a> to write a review</p>
+    </div>
+    {% elif not user_has_purchased %}
+    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8 text-center">
+        <p class="text-yellow-800">You must purchase this product to leave a review</p>
+    </div>
+    {% endif %}
+
+    <!-- Individual Reviews List -->
+    {% if reviews %}
+    <div class="space-y-6">
+        {% for review in reviews %}
+        <article class="border-b border-gray-200 pb-6">
+            <div class="flex gap-4">
+                <!-- Avatar -->
+                <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                    {{ review.user.first_name.0|upper }}{{ review.user.last_name.0|upper }}
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
+                        <div>
+                            <!-- FULL NAME Display -->
+                            <h6 class="font-semibold text-gray-900 text-lg">
+                                {{ review.user.full_name }}
+                            </h6>
+                            
+                            <!-- Read-only Star Display for Reviews -->
+                            <div class="flex text-yellow-400 text-sm mt-1">
+                                {% for i in "12345" %}
+                                    {% if review.rating >= forloop.counter %}
+                                        <i class="fas fa-star"></i>
+                                    {% elif review.rating >= forloop.counter|add:"-0.5" %}
+                                        <i class="fas fa-star-half-alt"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="ml-2 text-gray-500 text-xs align-middle self-center">({{ review.rating }})</span>
+                            </div>
+                        </div>
+                        <span class="text-sm text-gray-500 mt-2 md:mt-0">{{ review.updated_at|date:"F d, Y" }}</span>
+                    </div>
+                    {% if review.subject %}
+                    <h6 class="font-bold text-gray-800 mt-2">{{ review.subject }}</h6>
+                    {% endif %}
+                    <p class="text-gray-700 leading-relaxed mt-1">
+                        {{ review.review|safe }}
+                    </p>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-8 text-gray-500">
+        <i class="far fa-comments text-4xl mb-3"></i>
+        <p>No reviews yet. Be the first to review this product!</p>
+    </div>
+    {% endif %}
+</div>
 
 </div>
 </section>
