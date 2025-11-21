@@ -11,10 +11,28 @@
 	<div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
 			
-			<!-- Product Image -->
-			<div class="flex items-center justify-center min-h-[400px] lg:min-h-[500px] bg-gray-50 rounded-lg p-6">
-				<img src="{{ product.product_image.url }}" class="w-full h-full object-contain" alt="{{ product.product_name }}">
-			</div>
+			<!-- Product Image Gallery Section -->
+            <div class="flex flex-col">
+                <!-- Main Image Display -->
+                <div class="flex items-center justify-center min-h-[400px] lg:min-h-[500px] bg-gray-50 rounded-lg p-6 mb-4 relative overflow-hidden">
+                    <img id="main-image" src="{{ product.product_image.url }}" class="w-full h-full object-contain transition-opacity duration-300 ease-in-out" alt="{{ product.product_name }}">
+                </div>
+
+                <!-- Thumbnails -->
+                <div class="flex gap-4 overflow-x-auto pb-2">
+                    <!-- Original Product Image as first thumbnail -->
+                        <div class="w-20 h-20 bg-gray-50 rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-600 transition overflow-hidden flex-shrink-0" onclick="changeImage('{{ product.product_image.url }}')">
+                        <img src="{{ product.product_image.url }}" class="w-full h-full object-cover" alt="Main view">
+                    </div>
+
+                    <!-- Gallery Images -->
+                    {% for i in product_gallery %}
+                    <div class="w-20 h-20 bg-gray-50 rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-600 transition overflow-hidden flex-shrink-0" onclick="changeImage('{{ i.images.url }}')">
+                        <img src="{{ i.images.url }}" class="w-full h-full object-cover" alt="Gallery image">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
 
 			<!-- Product Info -->
 			 <form action="{% url 'add_cart' product.id %}" method="POST">
@@ -374,6 +392,13 @@
 
 </div>
 </section>
+
+<script>
+    function changeImage(element) {
+        var main_prod_img = document.getElementById("main-image");
+        main_prod_img.src = element;
+    }
+</script>
 
 <style>
 

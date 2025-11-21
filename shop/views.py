@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from carts.models import CartItem
 from carts.views import _cart_id
 from shop.forms import ReviewForm
-from shop.models import Category, Product, ReviewRating
+from shop.models import Category, Product, ProductGallery, ReviewRating
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.db.models import Avg, Count
@@ -10,14 +10,28 @@ from django.contrib import messages
 
 def home(request):
     products = Product.objects.all().filter(is_available=True)
-
+    
+    # Add rating data to each product
+    for product in products:
+        reviews = ReviewRating.objects.filter(product=product, status=True)
+        product.review_count = reviews.count()
+        product.avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+    
     context = {
         'products': products,
     }
     return render(request, 'shop/home.html', context)
 
+
 def store(request):
     products = Product.objects.all().filter(is_available=True)
+    
+    # Add rating data to each product
+    for product in products:
+        reviews = ReviewRating.objects.filter(product=product, status=True)
+        product.review_count = reviews.count()
+        product.avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+    
     paginator = Paginator(products, 6)
     page = request.GET.get('page')
     paged_product = paginator.get_page(page)
@@ -50,6 +64,9 @@ def product_detail(request, category_slug, product_slug):
     Handles review submission for authenticated users.
     """
     product = get_object_or_404(Product, slug=product_slug, category__slug=category_slug)
+
+    # Get the product gallery
+    product_gallery = ProductGallery.objects.filter(product=product)
     
     # Handle review submission
     if request.method == 'POST' and request.user.is_authenticated:
@@ -114,6 +131,7 @@ def product_detail(request, category_slug, product_slug):
     
     context = {
         'product': product,
+        'product_gallery': product_gallery,
         'form': form,
         'reviews': reviews,
         'review_count': review_count,

@@ -1,10 +1,17 @@
 from django.contrib import admin
-from .models import Category, Product, Variation, ReviewRating
+from .models import Category, Product, ProductGallery, Variation, ReviewRating
+import admin_thumbnails
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('category_name', 'slug')
     prepopulated_fields = {'slug': ('category_name',)}
+
+
+@admin_thumbnails.thumbnail('images')
+class ProductGalleryInline(admin.TabularInline):
+    model = ProductGallery
+    extra = 1
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -13,6 +20,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('product_name',)
     prepopulated_fields = {'slug': ('product_name',)}
     filter_horizontal = ('category',)
+    inlines = [ProductGalleryInline]
 
     def display_categories(self, obj):
         return ", ".join([cat.category_name for cat in obj.category.all()])
@@ -40,3 +48,7 @@ class VariationAdmin(admin.ModelAdmin):
 @admin.register(ReviewRating)
 class ReviewRatingAdmin(admin.ModelAdmin):
     list_display = ('product', 'review')
+
+@admin.register(ProductGallery)
+class ProductGalleryAdmin(admin.ModelAdmin):
+    list_display = ('product',)

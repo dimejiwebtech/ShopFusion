@@ -116,15 +116,19 @@
 					</a>
 					
 					<!-- Rating -->
-					<div class="flex items-center gap-1 mt-2">
-						<div class="flex text-yellow-400 text-sm">
-							<i class="fas fa-star"></i>
-							<i class="fas fa-star"></i>
-							<i class="fas fa-star"></i>
-							<i class="fas fa-star"></i>
-							<i class="far fa-star"></i>
+					<div class="flex items-center gap-2 mb-3">
+						<div class="flex text-yellow-400">
+							{% for i in "12345" %}
+								{% if product.avg_rating >= forloop.counter %}
+									<i class="fas fa-star"></i>
+								{% elif product.avg_rating >= forloop.counter|add:"-0.5" %}
+									<i class="fas fa-star-half-alt"></i>
+								{% else %}
+									<i class="far fa-star"></i>
+								{% endif %}
+							{% endfor %}
 						</div>
-						<span class="text-xs text-gray-500 ml-1">(4.0)</span>
+						<span class="text-gray-600 text-sm">({{ product.avg_rating|floatformat:1 }}) · {{ product.review_count }} review{{ product.review_count|pluralize }}</span>
 					</div>
 					
 					<!-- Price -->
